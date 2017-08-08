@@ -1,0 +1,10 @@
+<!---Output all news if no url scope newsID not present in URL--->
+
+
+<!---Get all news--->
+
+	  <h1> News</h1>
+      <table>
+		<!---Output  news in a table--->
+		
+      </table>

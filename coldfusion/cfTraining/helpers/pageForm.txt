@@ -1,0 +1,22 @@
+		<cfform id="frm_editPage" preservedata="true" >
+		<!--- Display pages form --->
+			<fieldset>
+				<legend>Edit a page</legend>
+				<!--- output error messages if messages array not empty --->
+				<cfif isDefined('variables.aErrorMessage') AND NOT arrayIsEmpty(variables.aErrorMessages)>
+					<cfoutput>
+					<cfloop array="#variables.aErrorMessages#" index="message">
+						<p class="errorMessage">#message#</p>
+					</cfloop> 
+					</cfoutput>
+				</cfif>
+				<dl>
+					<dt><label for="fld_pageTitle">Page Title</label></dt>
+					<dd><cfinput name="fld_pageTitle" id="fld_pageTitle" required="true" message="Please enter a valid page title" validateAt="onSubmit" /></dd>
+					<dt><label for="fld_pageContent">Page Content</label></dt>
+					<dd><cftextarea name="fld_pageContent" id="fld_pageContent" required="true" message="Please enter a valid page content" validateAt="onSubmit" richtext="true" height="500" ></cftextarea></dd>
+				</dl>
+				<!---Create hidden form field to store page ID--->
+				<input type="submit" name="fld_editPageSubmit" id="fld_editPageSubmit" value="Update Page" />
+			</fieldset>
+		</cfform>

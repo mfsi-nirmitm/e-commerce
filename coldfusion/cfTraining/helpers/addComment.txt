@@ -1,0 +1,6 @@
+			<cfquery>
+				INSERT INTO TBL_COMMENTS
+				(FLD_COMMENTAUTHOR, FLD_COMMENTCONTENT, FLD_COMMENTNEWS, FLD_COMMENTDATE, FLD_COMMENTISAPPROVED)
+				VALUES
+				(<cfqueryparam value="#arguments.commentAuthor#" cfsqltype="cf_sql_varchar" />, <cfqueryparam value="#arguments.commentContent#" cfsqltype="cf_sql_longvarchar" />, <cfqueryparam value="#arguments.newsID#" cfsqltype="cf_sql_integer" />, #now()#, 0)
+			</cfquery>

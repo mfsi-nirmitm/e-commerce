@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sign Up Form</title>
+        <link rel="stylesheet" href="css/normalize.css">
+        <link href='https://fonts.googleapis.com/css?family=Nunito:400,300' rel='stylesheet' type='text/css'>
+		<script type="text/javascript" src="script/jquery.min.js"></script>
+		
+		<script src="script/script1.js" type="text/javascript"></script>
+		
+	</head>
+    <body>
+      <form action="index2.html" method="get" onsubmit="return submit_basic_form();" autocomplete="off">
+      
+        <h1>Sign Up</h1>
+        
+        <fieldset>
+          <legend><span class="number">1</span>Your basic info</legend>
+          <label for="first_name">First Name:</label>
+          <input  type="text" id="first_name" value="" name="user_first_name" >
+		  <span class="error" id="first_name_error"></span>
+          
+		  <label for="middle_name">Middle Name:</label>
+          <input type="text" id="middle_name" name="user_middle_name">
+		  
+		  <label for="last_name">Last Name:</label>
+          <input type="text" id="last_name" name="user_last_name">
+		  <span class="error" id="last_name_error"></span>
+		  
+          <label for="email">Email I'd:</label>
+          <input type="text" id="email" name="user_email">
+		  <span class="error" id="email_error"></span>
+          
+		  <label for="contact">Contact No:</label>
+          <input type="text" id="contact" name="user_contact" maxlength="10">
+		  <span class="error" id="contact_error"></span>
+          
+		  <label for="password">Password:</label>
+          <input type="password" id="password" name="user_password">
+		  <span class="error" id="password_error"></span>
+		  
+		  <label for="confirm_password">Confirm Password:</label>
+          <input type="password" id="confirm_password" name="user_confirm_password">
+		  <span class="error" id="confirm_password_error"></span>
+		  
+		  <label for="dob" >Date Of Birth:</label>
+		  <!--<input type="date" id="dob" name="user_dob" >-->
+		  <input type="text" id="dob" name="user_dob" placeholder="dd/mm/yyyy" >
+		  <span class="error" id="dob_error"></span>
+          
+		  <label>Gender:</label>
+          <input type="radio" id="male" value="male" name="user_gender"><label for="male" class="light">Male</label><br>
+          <input type="radio" id="female"  value="female"  name="user_gender"><label for="female" class="light">Female</label><br>
+		  <span class="error" id="user_gender_error"></span>
+        </fieldset>
+		
+		<button id="myBtn" type="submit" >Next</button> 
+      </form>
+
+    </body>
+</html>

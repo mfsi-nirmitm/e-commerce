@@ -1,0 +1,71 @@
+body {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 0.9em;
+	color: #333;
+}
+#wrapper p.errorMessage {
+	font-size: 0.8em;
+	font-weight: bold;
+	color: #F00;
+}
+#wrapper p.feedback {
+	font-size: 1em;
+	font-weight: bold;
+	color: #9C6;
+}
+#wrapper #header form p {
+	font-size: 0.8em;
+	font-weight: bold;
+}
+#wrapper #pageBody h1 {
+	color: #7A0000;
+	font-weight: bold;
+	font-size: 1.8em;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #7A0000;
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+}
+#wrapper #pageBody img.floatLeft {
+	float: left;
+	margin-right: 10px;
+	margin-bottom: 10px;
+}
+#wrapper #pageBody img.floatRight {
+	float: right;
+	margin-bottom: 10px;
+	margin-left: 10px;
+}
+#wrapper #pageBody p {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+#wrapper #pageBody p.alignRight {
+	text-align: right;
+}
+#wrapper #pageBody p.justify {
+	text-align: justify;
+}
+#wrapper #pageBody p.metadata {
+	font-size: 0.8em;
+	font-style: italic;
+	margin-bottom: 30px;
+}
+#wrapper #pageBody h2 {
+	color: #72964C;
+	font-size: 1.3em;
+	font-weight: bold;
+	margin-top: 15px;
+	margin-bottom: 10px;
+	font-style: italic;
+}
+#wrapper #pageBody a, #wrapper #header form a  {
+	color: #72964C;
+}
+#wrapper #pageBody a:hover, #wrapper #header form a:hover {
+	color: #32CF17;
+}
+#wrapper #pageBody ul, #wrapper #pageBody ol {
+	margin-left: 30px;
+}

@@ -1,0 +1,65 @@
+#wrapper #pageBody #calendarSideBar {
+	float: right;
+	/*height: 278px;*/
+	width: 278px;
+	border: 1px solid #7A0000;
+	padding: 10px;
+	-moz-border-radius:15px;
+	-webkit-border-radius:15px;
+	border-radius:15px;
+}
+#wrapper #pageBody #calendarSideBar h1 {
+	color: #678945;
+	font-weight: normal;
+	font-size: 1.3em;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #678945;
+	width: 130px;
+}
+#wrapper #pageBody #calendarSideBar #EventDetails {
+	overflow: hidden;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #7A0000;
+}
+#wrapper #pageBody #calendarSideBar #EventDetails #eventDate {
+	background-image: url(../images/calendarBkg.jpg);
+	background-repeat: no-repeat;
+	height: 55px;
+	width: 31px;
+	padding-top: 4px;
+	text-align: center;
+	padding-right: 16px;
+	padding-left: 10px;
+	float: left;
+	overflow: hidden;
+	-moz-transform:rotate(-10deg);
+	-webkit-transform:rotate(-10deg);
+	-o-transform:rotate(-10deg);
+	margin-left: 5px;
+}
+#wrapper #pageBody #calendarSideBar #EventDetails #eventDate #month {
+	color: #FFF;
+	font-size: 1.1em;
+	display: block;
+	margin-bottom: 3px;
+}
+#wrapper #pageBody #calendarSideBar #EventDetails #eventDate #days {
+	font-weight: bold;
+	font-size: 1em;
+	display: block;
+}
+#wrapper #pageBody #calendarSideBar #EventDetails h2 {
+	color: #7C0303;
+	font-style: normal;
+	margin-left: 70px;
+}
+#wrapper #pageBody #calendarSideBar #EventDetails #eventTime {
+	margin-left: 70px;
+}
+#wrapper #pageBody #calendarContent {
+	float: left;
+	width: 580px;
+}
+

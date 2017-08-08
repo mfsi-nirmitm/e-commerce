@@ -1,0 +1,12 @@
+			<cfset local.aMessages = [] />
+			<cfif arguments.commentAuthor EQ ''>
+				<cfset arrayAppend(local.aMessages,'Please enter your name or nickname in the form')>
+			</cfif>
+			<cfif arguments.commentContent EQ ''>
+				<cfset arrayAppend(local.aMessages,'Please provide a valid content for your comment') />
+			</cfif>
+
+			<cfif arguments.securityCodeUser NEQ arguments.securityCodeSystem>
+					<cfset arrayAppend(local.aMessages,'The security code you typed is not correct.  Try again') />
+			</cfif>
+			<cfreturn local.aMessages />

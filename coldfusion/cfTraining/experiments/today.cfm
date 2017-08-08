@@ -1,0 +1,3 @@
+<cfoutput>
+	#dateFormat(now())#
+</cfoutput>

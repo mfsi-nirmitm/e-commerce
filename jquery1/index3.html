@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sign Up Form</title>
+        <link rel="stylesheet" href="css/normalize.css">
+        <link href='https://fonts.googleapis.com/css?family=Nunito:400,300' rel='stylesheet' type='text/css'>
+		
+		<script type="text/javascript" src="script/jquery.min.js"></script>
+        <script src="script/script1.js" type="text/javascript"></script>
+		
+    </head>
+	<body>
+		<form action="index4.html" method="get" onsubmit="return submit_address_form();" autocomplete="off">
+			<fieldset>
+				<legend><span class="number">3</span>Permanent Address:</legend>
+				<label for="address">Address:</label>
+				<textarea id="address" name="user_permanent_address"></textarea>
+				<span class="error" id="address_error"></span>
+				
+				<label for="city">City:</label>
+				<input type="text" id="city" name="user_permanent_city">
+				<span class="error" id="city_error"></span>
+				
+				<label for="state">State:</label>
+				<input type="text" id="state" name="user_permanent_state">
+				<span class="error" id="state_error"></span>
+				
+				<label for="country">Country:</label>
+				<input type="text" id="country" name="user_permanent_country" >
+				<span class="error" id="country_error"></span>
+				
+				<label for="pin">Pin Code</label>
+				<input type="text" id="pin" name="pin_code2" maxlength="6" >
+				<span class="error" id="pin_error"></span>
+				
+			</fieldset>
+			<button class="half" onclick="location.href = 'index2.html';" >Previous</button>
+			<button class="half" type="submit" >Next</button>
+		</form>
+	</body>
+</html>

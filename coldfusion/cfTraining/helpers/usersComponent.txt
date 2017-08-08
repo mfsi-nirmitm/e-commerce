@@ -1,0 +1,61 @@
+		<!---Get users to approve--->
+		<cffunction name="getUsersToApprove" returntype="Query" roles="Administrator">
+			<cfquery name="local.rs_UsersToApprove">
+				SELECT TBL_USERS.FLD_USERID, TBL_USERS.FLD_USERFIRSTNAME, TBL_USERS.FLD_USERLASTNAME, TBL_USERS.FLD_USERCOMMENT, TBL_USERS.FLD_USEREMAIL
+				FROM TBL_USERS
+				WHERE FLD_USERAPPROVED = 0
+			</cfquery>
+			<cfreturn local.rs_UsersToApprove />
+		</cffunction>
+		
+		<!--- approve user method --->
+		<cffunction name="approveUser" returntype="void" roles="Administrator">
+			<cfargument name="userID" type="numeric" required="true" /> 
+			<cfquery >
+				UPDATE TBL_USERS
+				SET 
+				FLD_USERAPPROVED = <cfqueryparam value="1" cfsqltype="cf_sql_bit" />,
+				FLD_USERISACTIVE = <cfqueryparam value="1" cfsqltype="cf_sql_bit" />
+				WHERE FLD_USERID = <cfqueryparam value="#arguments.userID#" cfsqltype="cf_sql_integer" />
+			</cfquery>
+			<!--- call the sendApproveMail() method of this component. --->
+		</cffunction>
+		
+		<!---Get All active Users Method--->
+		<cffunction name="getAllActiveUsers" returntype="Query">
+			<cfquery name="local.rs_allUsers">
+				SELECT TBL_USERS.FLD_USERID, TBL_USERS.FLD_USERFIRSTNAME, TBL_USERS.FLD_USERLASTNAME, TBL_USERS.FLD_USERCOMMENT, TBL_USERS.FLD_USEREMAIL, TBL_ROLES.FLD_ROLENAME, TBL_INSTRUMENTS.FLD_INSTRUMENTNAME
+				FROM TBL_USERS INNER JOIN TBL_ROLES ON TBL_USERS.FLD_USERROLE = TBL_ROLES.FLD_ROLEID INNER JOIN TBL_INSTRUMENTS ON TBL_USERS.FLD_USERINSTRUMENT = TBL_INSTRUMENTS.FLD_INSTRUMENTID
+				WHERE FLD_USERAPPROVED = 1 AND FLD_USERISACTIVE = 1
+				ORDER BY FLD_INSTRUMENTNAME ASC , FLD_USERLASTNAME ASC
+			</cfquery>
+			<cfreturn local.rs_allUsers/>
+		</cffunction> 
+		
+		<!---Delete user function--->
+		<cffunction name="deleteUser" returntype="void" roles="Administrator">
+			<cfargument name="userID" type="numeric" required="true" />
+			<cfquery>
+				DELETE FROM TBL_USERS
+				WHERE FLD_USERID = <cfqueryparam value="#arguments.userID#" cfsqltype="cf_sql_integer" />
+			</cfquery>
+		</cffunction>
+		
+		<!---deactivate User--->
+		<cffunction name="deactivateUser" returntype="void" roles="Administrator" >
+			<cfargument name="userID" type="numeric" required="true" >
+			<cfquery>
+				UPDATE TBL_USERS
+				SET
+				FLD_USERISACTIVE = 0
+				WHERE FLD_USERID = <cfqueryparam value="#arguments.userID#" cfsqltype="cf_sql_integer" />
+			</cfquery> 
+		</cffunction>
+		
+		<!---Send approved Mail function--->
+		<cffunction name="sendApprovedMail" returntype="void" roles="Administrator" access="private" >
+			<cfargument name="userID" type="numeric" required="true" />
+			<!---Get approved user info--->
+			
+			<!---Send mail to the user--->
+		</cffunction>

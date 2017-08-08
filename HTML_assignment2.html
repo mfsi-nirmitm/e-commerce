@@ -1,0 +1,140 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>HTML Assignment2</title>
+		<meta name="Author" content="Nirmit Maheshwari" >
+		<style>
+			body{
+				padding:0;
+				margin:0;
+			}
+			.section{
+				width:100%;
+				margin : 0 auto;
+			}
+			#topbar{
+				height : auto;
+				background-color : #000000;
+				text-align : center;
+				padding:10px 0 10px 0;
+			}
+			#logo-text{
+				color:#ffffff;
+				font-style:bold;
+				font-size : 25px;
+			}
+			#banner{
+				width:100%;
+			}
+			#registration_form{
+				margin-top: 30px;
+				text-align:center;
+				width:60%;
+				margin : 0 auto;
+			}
+			h1{
+				color:#008080;
+				text-decoration : underline;
+			}
+			fieldset{
+				width :100%;
+				text-align : left;
+				padding :30px;
+				margin : 10px;
+				font-weight: bold;
+				background-color :#FFEFD5;
+			}
+			input[type=text], input[type=password], input[type=date], select{
+				width: 100%;
+				padding: 12px 20px;
+				margin: 8px 0;
+				border: 1px solid #cccccc;
+				box-sizing: border-box;
+			}
+			.display_block{
+				display : block;
+				margin: 8px 0;
+				font-weight: normal;
+			}
+			.submit_button{
+				background-color:#4CAF50;
+				padding : 10px;
+				font-size :20px;
+				color:#ffffff;
+				border:none;			
+			}
+		</style>
+	</head>
+	<body>
+		<div id="topbar" class="section">
+			<div id="logo-text">WELCOME</div>
+			<img src="images/logo1.png"  alt="logo" >
+		</div>
+		<div class="section">
+			<img id="banner" src="images/banner2.jpg" alt="banner" >
+		</div>
+		<div class="section" id="registration_form">
+			<h1>Sign Up</h1>
+			<form method="get" >
+				<fieldset>
+					<legend>Personal Details</legend>
+					<label >Full Name :</label>
+					<input type="text" name="first_name" placeholder="Enter First Name" required />
+					<input type="text" name="second_name" placeholder="Enter Middle Name" />
+					<input type="text" name="last_name" placeholder="Enter Last Name" />
+					<label for="email">Email I'd :</label>
+					<input type="text" placeholder="Enter E-mail I'd" name="email" required />
+					<label for="contact" >Contact Number :</label>
+					<input type="text" placeholder="Enter Contact Number" name="contact" required />
+					<label for="password">Password :</label>
+					<input type="password" placeholder="Enter New Password" name="password" required />
+					<label for="confirm_password" >Confirm Password :</label>
+					<input type="password" name="confirm_password" placeholder="Re-enter Password" required />
+					<label for="dob">Date Of Birth :</label>
+					<input placeholder="Date" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="date">
+					<label for="gender" > Gender :</label>
+					<label class="display_block"><input type="radio" value="male" name="gender" checked> Male </label>
+					<label class="display_block"><input type="radio" value="female" name="gender" > Female  </label>
+				</fieldset>
+				<fieldset>
+					<legend>Current Address</legend>
+					<label for="current_address">Address :</label>
+					<input type="text" name="current_address" placeholder="Address Line 1" required />
+					<input type="text" name="current_address1" placeholder="Address Line 2" required />
+					<label for="current_city">City :</label>
+					<input type="text" name="current_city" placeholder="City" required />
+					<label for="current_state" >State :</label>
+					<input type="text" name="current_state" placeholder="State" required />
+					<label for="current_country">Country :</label>
+					<input type="text" name="current_country" placeholder="Country" required />
+					<label for="current_pin">Pin Code :</label>
+					<input type="text" name="current_pin" placeholder="PIN Code" required />
+				</fieldset>
+				<fieldset>
+					<legend>Permanent Address</legend>
+					<label for="permanent_address">Address :</label>
+					<input type="text" name="permanent_address" placeholder="Address Line 1" required />
+					<input type="text" name="permanent_address1" placeholder="Address Line 2" required />
+					<label for="permanent_city">City :</label>
+					<input type="text" name="permanent_city" placeholder="City" required />
+					<label for="permanent_state" >State :</label>
+					<input type="text" name="permanent_state" placeholder="State" required />
+					<label for="permanent_country">Country :</label>
+					<input type="text" name="permanent_country" placeholder="Country" required />
+					<label for="permanent_pin">Pin Code :</label>
+					<input type="text" name="permanent_pin" placeholder="PIN Code" required />
+				</fieldset>
+				<fieldset>
+					<legend>Personal Interest</legend>
+					<label for="personal_interest">Your Personal Interest :</label>
+					<label class="display_block"><input type="checkbox" name="personal_interest" value="sports"> Sports </label>
+  					<label class="display_block"><input type="checkbox" name="personal_interest" value="books" > Books  </label>
+  					<label class="display_block"><input type="checkbox" name="personal_interest" value="computer & software" > Computer & Software  </label>
+  					<label class="display_block"><input type="checkbox" name="personal_interest" value="fashion" > Fashion </label>
+  					<label class="display_block"><input type="checkbox" name="personal_interest" value="photography" > Photography  </label> 
+				</fieldset>
+				<input class="submit_button" type="submit" value="Submit" />
+			</form>
+		</div>
+	</body>
+</html>

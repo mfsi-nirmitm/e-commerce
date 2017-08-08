@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>CSS Assignment</title>
+		<meta name="author" content="Nirmit Maheshwari" >
+		<link rel="stylesheet" type="text/css" href="CSS_assignment.css">
+	</head>
+	</body>
+		<div class="division">
+			<h5 id="registration_text">Registration</h5>
+			<form>
+				<label class="label text-align-right color" for="first_name"><span  class="astik">*</span>Name </label>
+				<input class="input width3" type="text" name="first_name" placeholder="First Name" required />
+				<!--<label  for="last_name"><span  class="astik">*</span>Last Name </label> -->
+				<input class="input width3" type="text" name="last_name" placeholder="Last Name" required />
+				<label class="label text-align-right" for="email"><span  class="astik">*</span>Email </label>
+				<input class="input width1" type="text" name="email" placeholder="Email" required />
+				<label class="label text-align-right" for="password" ><span  class="astik">*</span>Password </label>
+				<input class="input width1" name="password" type="password" placeholder="New Password" required />
+				<label class="label text-align-right" for="confirm_password" ><span class="astik">*</span>Confirm Password </label>
+				<input class="input width1" type="password" name="confirm_password" placeholder="Confirm Password" required />
+				<p ><label class="label text-align-right" for="gender" ><span class="astik">*</span>Gender </label>
+				<label class="text-align-left"><input type="radio" value="male" name="gender" checked> Male</label>
+				<label class="text-align-left"><input type="radio" value="female" name="gender" > Female</label></p>
+				<label class="label text-align-right" for="address1" ><span class="astik">*</span>Address 1</label>
+				<input class="input width2" type="text" name="address1" placeholder="Address Line1" required />
+				<label class="label text-align-right" for="address2">Address 2 </label>
+				<input class="input width2" type="text" name="address2" placeholder="Address Line2" />
+				<label class="label text-align-right" for="city"><span class="astik">*</span>City</label>
+				<input class="input width1" type="text" name="city" placeholder="City" required />
+				<label class="label text-align-right" for="state"><span class="astik">*</span>State</label>
+				<select class="input width2" required >
+					<option class="not-display" value="" disabled selected>-- Select State --</option>
+					<option class="option" value="aruranchal_pradesh">Aruranchal Pradesh</option>
+					<option class="option" value="himanchal_pradesh">Himanchal Pradesh</option>
+					<option class="option" value="utter_pradesh">Uttar Pradesh</option>
+				</select>
+				<label class="label text-align-right" for="country"><span class="astik">*</span>Country</label>
+				<select class="input width2" required>
+					<option class="not-display" value="" disabled selected >-- Select Country --</option>
+					<option class="option" value="india" >India</option>
+					<option class="option" value="sri_lanka">Sri Lanka</option>
+					<option class="option" value="china">China</option>
+ 				</select>
+				<p><label class="label text-align-right" for="suscribe">Subscribe news letter?</label>
+				<label class="text-align-left"><input type="radio" value="yes" name="suscribe" > Yes</label>
+				<label class="text-align-left"><input type="radio" value="no" name="suscribe" > No</label></p>
+				<div class="center">
+					<input class="button" type="submit" value="submit" />
+				</div>
+			</form>
+		</div>
+	</body>
+</html>

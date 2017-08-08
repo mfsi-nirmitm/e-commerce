@@ -1,0 +1,83 @@
+#wrapper #pageBody #homeContent {
+	float: left;
+	width: 550px;
+}
+#wrapper #pageBody #homeSideBar {
+	float: right;
+	width: 302px;
+}
+#wrapper #pageBody #homeSideBar h1 {
+	color: #333;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+	font-size: 1.1em;
+	font-weight: bold;
+	padding-left: 50px;
+	margin-bottom: 5px;
+	padding-bottom: 0px;
+}
+#wrapper #pageBody #homeSideBar #nextEventsTitle {
+	background-image: url(../images/nextEventsTitleBg.jpg);
+	background-repeat: no-repeat;
+	height: 27px;
+	width: 302px;
+	padding-top: 15px;
+}
+#wrapper #pageBody #homeSideBar #latestNewsTitle {
+	background-image: url(../images/latestNewsTitleBg.jpg);
+	background-repeat: no-repeat;
+	height: 27px;
+	width: 302px;
+	padding-top: 23px;
+}
+#wrapper #pageBody #homeSideBar #pictOfTheDayTitle {
+	background-image: url(../images/pictureOfTheDayTitleBG.jpg);
+	background-repeat: no-repeat;
+	height: 27px;
+	width: 302px;
+	padding-top: 22px;
+}
+#wrapper #pageBody #homeSideBar div.pod {
+	margin-bottom: 30px;
+}
+#wrapper #pageBody #homeSideBar div.pod ul {
+	list-style-type: none;
+	width: 252px;
+	margin-right: 25px;
+	margin-left: 25px;
+}
+#wrapper #pageBody #homeSideBar div.pod ul li {
+	margin-bottom: 5px;
+	height: 27px;
+	width: 252px;
+}
+#wrapper #pageBody #homeSideBar div.pod ul li a {
+	display: block;
+	background-image: url(../images/sideBarItemBG.gif);
+	background-repeat: no-repeat;
+	height: 22px;
+	width: 232px;
+	font-size: 0.8em;
+	padding-right: 10px;
+	padding-left: 10px;
+	padding-top: 5px;
+	color: #333;
+	text-decoration: none;
+}
+#wrapper #pageBody #homeSideBar div.pod ul li a:hover {
+	background-image: url(../images/sideBarItemHoverBg.gif);
+}
+#wrapper #pageBody #homeSideBar div.pod ul li strong {
+	font-size: 1.2em;
+	font-weight: bold;
+}
+#wrapper #pageBody #homeSideBar div.pod img {
+	background-color: #FAFFE8;
+	display: block;
+	padding: 6px;
+	margin-right: 24px;
+	margin-left: 24px;
+	border: 1px solid #333;
+}

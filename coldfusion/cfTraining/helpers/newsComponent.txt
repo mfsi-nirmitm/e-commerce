@@ -1,0 +1,61 @@
+	<!---AddNews method--->
+	<cffunction name="addNews" returntype="void" roles="Administrator" >
+		<cfargument name="newsTitle" required="true" type="string" />
+		<cfargument name="newsCreationDate" required="true" type="date" />
+		<cfargument name="newsContent" required="true" type="string" />
+		<cfquery>
+			INSERT INTO TBL_NEWS
+			(FLD_NEWSAUTHOR, FLD_NEWSCONTENT, FLD_NEWSCREATIONDATE, FLD_NEWSTITLE)
+			VALUES
+			(#session.stLoggedInUser.userID#, <cfqueryparam value="#arguments.newsContent#" cfsqltype="cf_sql_longvarchar" />, <cfqueryparam value="#arguments.newsCreationDate#" cfsqltype="cf_sql_timestamp" />, <cfqueryparam value="#arguments.newsTitle#" cfsqltype="cf_sql_varchar" />)
+		</cfquery>   
+	</cffunction>
+	
+	
+	<!---Update News Method--->
+	<cffunction name="updateNews" returntype="void" roles="Administrator">
+		<cfargument name="newsTitle" required="true" type="string" />
+		<cfargument name="newsDate" required="true" type="date" />
+		<cfargument name="newsContent" required="true" type="string" />
+		<cfargument name="newsID" required="true" type="numeric" />
+		<cfquery>
+			UPDATE TBL_NEWS
+			SET
+			FLD_NEWSTITLE = <cfqueryparam value="#arguments.newsTitle#" cfsqltype="cf_sql_varchar" />,
+			FLD_NEWSCREATIONDATE = <cfqueryparam value="#arguments.newsDate#" cfsqltype="cf_sql_date" />,
+			FLD_NEWSCONTENT = <cfqueryparam value="#arguments.newsContent#" cfsqltype="cf_sql_longvarchar" />
+			WHERE FLD_NEWSID = <cfqueryparam value="#arguments.newsID#" cfsqltype="cf_sql_integer" />
+		</cfquery>    
+	</cffunction>
+	
+	
+	<!---Delete News Method--->
+	<cffunction name="deleteNews" returntype="void" roles="Administrator">
+		<cfargument name="newsID" required="true" type="numeric" />
+		<cfquery>
+			DELETE FROM TBL_NEWS
+			WHERE FLD_NEWSID = <cfqueryparam value="#arguments.newsID#" cfsqltype="cf_sql_integer" />
+		</cfquery> 
+	</cffunction>
+	
+	
+	<!---Validate news form method--->
+	<cffunction name="validateNewsForm" returntype="Array" roles="Administrator" >
+		<cfargument name="newsTitle" type="string" required="true" />
+		<cfargument name="newsDate" type="string" required="true" />
+		<cfargument name="newsContent" type="string" required="true" />
+		<cfset local.messages = [] />
+		<!---Validate news Title--->
+		<cfif arguments.newsTitle EQ ''>
+			<cfset arrayAppend(local.messages,'Please enter a valid title for your news') />
+		</cfif>
+		<!---Validate news Date--->
+		<cfif arguments.newsDate EQ ''>
+			<cfset arrayAppend(local.message, 'Please enter a valid publish date for your news') />
+		</cfif>
+		<!---Validate news content--->
+		<cfif arguments.newsContent EQ ''>
+			<cfset arrayAppend(local.messages,'Please provide some content for your news') />
+		</cfif>
+		<cfreturn local.messages />
+	</cffunction>

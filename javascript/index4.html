@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sign Up Form</title>
+        <link rel="stylesheet" href="css/normalize.css">
+        <link href='https://fonts.googleapis.com/css?family=Nunito:400,300' rel='stylesheet' type='text/css'>
+        <script src="script/script1.js" type="text/javascript"></script>
+		
+    </head>
+	<body onload="captcha();">
+		<form action="" method="get" onsubmit="return sign_up();" >
+			<fieldset>
+				<legend><span class="number">4</span>Personal Interest:</legend>
+				<label>Interests:</label>
+				<input type="checkbox" id="Sports" value="Sports" name="user_interest"><label class="light" for="Sports">Sports</label><br>
+				<input type="checkbox" id="Books" value="Books" name="user_interest"><label class="light" for="Books">Books</label><br>
+				<input type="checkbox" id="Computer_Software" value="Computer_Software" name="user_interest"><label class="light" for="Computer_Software">Computer & Software</label><br>
+				<input type="checkbox" id="Fashion" value="Fashion" name="user_interest"><label class="light" for="Fashion">Fashion</label><br>
+				<input type="checkbox" id="Photography" value="Photography" name="user_interest"><label class="light" for="Photography">Photography</label> <br>
+				<span class="error" id="user_interest_error"></span>
+
+				<label class="captcha"> <span id="num1"></span> <span id="sign"></span> <span id="num2"></span> =  <img class="captcha_refresh" onclick="captcha();" src="images/refresh.png" height= "30px" /> </label>
+				
+				<input type="text" id="answer" value="" name="user_answer"  placeholder="Enter Your Answer">
+				<span class="error" id="answer_error"></span>
+			</fieldset>
+			<button class="half" onclick="location.href = 'index3.html';" >Previous</button>
+			<button class="half" type="submit" >Sign Up</button>
+		</form>
+	</body>
+</html>
