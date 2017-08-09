@@ -27,7 +27,8 @@
 	<cffunction name="onApplicationStart" returntype="boolean" >
 		<cfset application.productService = createObject("component",'coldfusion.bigbazar.components.productservices') />
 		<cfset application.cartService =    createObject("component","coldfusion.bigbazar.components.cartservices")  />
-		<cfset application.checkoutService =    createObject("component","coldfusion.bigbazar.components.checkoutservices")>
+		<cfset application.checkoutService =    createObject("component","coldfusion.bigbazar.components.checkoutservices") />
+		<cfset application.orderService = createObject("component" , "coldfusion.bigbazar.components.order-receipt") />
 
 		<cfreturn true />
 	</cffunction>

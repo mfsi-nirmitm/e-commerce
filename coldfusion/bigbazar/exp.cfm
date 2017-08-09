@@ -45,3 +45,14 @@
 	</p>
 </cfoutput>
 --->
+
+<cfset getAddress = application.orderService.getAddress(5) />
+<cfoutput query = "getAddress">
+	<p> #getAddress.ADDRESSTYPEID# - #getAddress.CUSTOMERADDRESS# - #getAddress.CUSTOMERSTATE# - #getAddress.CUSTOMERCITY# - #getAddress.CUSTOMERZIPCODE#</p>
+</cfoutput>
+<cfoutput >
+	<p> #getAddress.ADDRESSTYPEID# - #getAddress.CUSTOMERADDRESS# - #getAddress.CUSTOMERSTATE# - #getAddress.CUSTOMERCITY# - #getAddress.CUSTOMERZIPCODE#</p>
+</cfoutput>
+<cfoutput >
+	<p> #getAddress.ADDRESSTYPEID[2]# - #getAddress.CUSTOMERADDRESS[2]# - #getAddress.CUSTOMERSTATE[2]# - #getAddress.CUSTOMERCITY[2]# - #getAddress.CUSTOMERZIPCODE[2]#</p>
+</cfoutput>

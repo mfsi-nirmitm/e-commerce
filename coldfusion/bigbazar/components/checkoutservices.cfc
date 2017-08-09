@@ -87,7 +87,24 @@
 	</cffunction>
 
 	<cffunction name = "addOrders" access = "public" returntype = "void" hint = "adding orders for customer" >
+		<cfargument name = "productWithSellerID" required = "true" type = "numeric" hint = "seller id of the product" />
+		<cfargument name = "transactionID" required = "true" type = "numeric" hint = "transaction id" />
+		<cfargument name = "items" required = "true" type = "numeric" hint = "no of product in order" />
+		<cfargument name  = "totalCost"  required = "true" type = "numeric" hint = "total cost of product"/>
+		<cfargument name  = "customerID" required = "true" type = "numeric" hint = "customer's id" />
 
+		<cfquery>
+			INSERT INTO CUSTOMERORDERS
+			( PRODUCTWITHSELLERID ,  CUSTOMERTRANSACTIONID , ORDERITEMS , ORDERTOTALCOST , CUSTOMERID )
+			VALUES
+			(
+				<cfqueryparam value = "#arguments.productWithSellerID#" cfsqltype = "cf_sql_numeric" /> ,
+				<cfqueryparam value = "#arguments.transactionID#" cfsqltype = "cf_sql_numeric" /> ,
+				<cfqueryparam value = "#arguments.items#" cfsqltype = "cf_sql_numeric" /> ,
+				<cfqueryparam value = "#arguments.totalCost#" cfsqltype = "cf_sql_numeric" /> ,
+				<cfqueryparam value = "#arguments.customerID#" cfsqltype = "cf_sql_numeric" />
+			)
+		</cfquery>
 	</cffunction>
 
 </cfcomponent>

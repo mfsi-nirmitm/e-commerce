@@ -35,7 +35,8 @@
 <cfparam name = "form.same_address" default = "off">
 
 <cfset variables.customerId = 0 />
-
+<cfset variables.tansactionId = 0 />
+<cfset variables.orderCost = 0 />
 <cfset variables.billingFirstNameError = "" />
 <cfset variables.billingEmailError = "" />
 <cfset variables.billingAddressError = "" />
@@ -164,13 +165,16 @@
 			<cfset application.checkoutService.insertCustomerAddress(Trim(form.billing_address),Trim(form.billing_state),Trim(form.billing_city),Trim(form.billing_zip),2,variables.customerId) />
 		</cfif>
 		<cfset application.checkoutService.addPaymentOption(Trim(form.card),Trim(form.credit_card_name),Trim(form.credit_card_number),Trim(form.card_expiration_month),Trim(form.card_expiration_year),variables.customerId) />
-		<cfset application.checkoutService.addTransaction() />
+		<cfset variables.tansactionId = #Int(application.checkoutService.addTransaction())# />
+		<cfset session.totalCart['transactionId'] = variables.tansactionId  />
 		<cfif structkeyExists (session , 'cart') >
 			<cfloop array = "#session.cart#" index = "thing">
-				<cfset  />
+				<cfset variables.orderCost = #thing['items']# * ( #thing['productprice']# + #thing['shippingprice']# ) />
+				<cfset application.checkoutService.addOrders(#thing['productwithsellerid']#,#variables.tansactionId#,#thing['items']#,#variables.orderCost# , #variables.customerId# )  />
 			</cfloop>
+			<cfset structdelete(session,'cart') />
 		</cfif>
-
+		<cflocation url="order-receipt.cfm" addToken="no" />
 	</cfif>
 </cfif>
 
@@ -191,10 +195,6 @@
     <link href="css/animate.css" rel="stylesheet">
 	<link href="css/main.css" rel="stylesheet">
 	<link href="css/responsive.css" rel="stylesheet">
-    <!--[if lt IE 9]>
-    <script src="js/html5shiv.js"></script>
-    <script src="js/respond.min.js"></script>
-    <![endif]-->
     <link rel="shortcut icon" href="images/ico/favicon.ico">
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/ico/apple-touch-icon-144-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114-precomposed.png">
@@ -235,90 +235,21 @@
 				<div class="row">
 					<div class="col-sm-4">
 						<div class="logo pull-left">
-							<a href="index.html"><img src="images/home/logo.png" alt="" /></a>
-						</div>
-						<div class="btn-group pull-right">
-							<div class="btn-group">
-								<button type="button" class="btn btn-default dropdown-toggle usa" data-toggle="dropdown">
-									USA
-									<span class="caret"></span>
-								</button>
-								<ul class="dropdown-menu">
-									<li><a href="">Canada</a></li>
-									<li><a href="">UK</a></li>
-								</ul>
-							</div>
-
-							<div class="btn-group">
-								<button type="button" class="btn btn-default dropdown-toggle usa" data-toggle="dropdown">
-									DOLLAR
-									<span class="caret"></span>
-								</button>
-								<ul class="dropdown-menu">
-									<li><a href="">Canadian Dollar</a></li>
-									<li><a href="">Pound</a></li>
-								</ul>
-							</div>
+							<a href="index.cfm"><img src="images/home/logo.png" alt="" /></a>
 						</div>
 					</div>
 					<div class="col-sm-8">
 						<div class="shop-menu pull-right">
 							<ul class="nav navbar-nav">
-								<li><a href=""><i class="fa fa-user"></i> Account</a></li>
-								<li><a href=""><i class="fa fa-star"></i> Wishlist</a></li>
-								<li><a href="checkout.html" class="active"><i class="fa fa-crosshairs"></i> Checkout</a></li>
-								<li><a href="cart.html"><i class="fa fa-shopping-cart"></i> Cart</a></li>
-								<li><a href="login.html"><i class="fa fa-lock"></i> Login</a></li>
+								<li><a href="index.cfm">Home</a></li>
+								<li><a href="cart.cfm"><i class="fa fa-shopping-cart"></i> Cart</a></li>
+								<li><a href="login.cfm"><i class="fa fa-lock"></i> Login</a></li>
 							</ul>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div><!--/header-middle-->
-
-		<div class="header-bottom"><!--header-bottom-->
-			<div class="container">
-				<div class="row">
-					<div class="col-sm-9">
-						<div class="navbar-header">
-							<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-								<span class="sr-only">Toggle navigation</span>
-								<span class="icon-bar"></span>
-								<span class="icon-bar"></span>
-								<span class="icon-bar"></span>
-							</button>
-						</div>
-						<div class="mainmenu pull-left">
-							<ul class="nav navbar-nav collapse navbar-collapse">
-								<li><a href="index.html">Home</a></li>
-								<li class="dropdown"><a href="#">Shop<i class="fa fa-angle-down"></i></a>
-                                    <ul role="menu" class="sub-menu">
-                                        <li><a href="shop.html">Products</a></li>
-										<li><a href="product-details.html">Product Details</a></li>
-										<li><a href="checkout.html" class="active">Checkout</a></li>
-										<li><a href="cart.html">Cart</a></li>
-										<li><a href="login.html">Login</a></li>
-                                    </ul>
-                                </li>
-								<li class="dropdown"><a href="#">Blog<i class="fa fa-angle-down"></i></a>
-                                    <ul role="menu" class="sub-menu">
-                                        <li><a href="blog.html">Blog List</a></li>
-										<li><a href="blog-single.html">Blog Single</a></li>
-                                    </ul>
-                                </li>
-								<li><a href="404.html">404</a></li>
-								<li><a href="contact-us.html">Contact</a></li>
-							</ul>
-						</div>
-					</div>
-					<div class="col-sm-3">
-						<div class="search_box pull-right">
-							<input type="text" placeholder="Search"/>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div><!--/header-bottom-->
 	</header><!--/header-->
 
 	<section id="cart_items">
