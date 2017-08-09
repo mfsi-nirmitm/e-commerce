@@ -29,6 +29,7 @@
 		<cfset application.cartService =    createObject("component","coldfusion.bigbazar.components.cartservices")  />
 		<cfset application.checkoutService =    createObject("component","coldfusion.bigbazar.components.checkoutservices") />
 		<cfset application.orderService = createObject("component" , "coldfusion.bigbazar.components.order-receipt") />
+		<cfset application.userService = createObject("component" , "coldfusion.bigbazar.components.userservices") />
 
 		<cfreturn true />
 	</cffunction>

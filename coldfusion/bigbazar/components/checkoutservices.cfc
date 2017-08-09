@@ -10,15 +10,17 @@
 		<cfargument name = "firstName" required = "true" type = "string" hint = "first name of customer" />
 		<cfargument name = "lastName" required ="true" type = "string" hint = "last name of customer" />
 		<cfargument name = "email" required = "true" type = "string" hint = "email address of the customer" />
+		<cfargument name = "customerTypeId" required = "true" type = "numeric" hint = "customer type " />
 
 		<cfquery name = "customerID">
 			INSERT INTO CUSTOMER
-			(FIRSTNAME, SECONDNAME, EMAILADDRESS)
+			(FIRSTNAME, SECONDNAME, EMAILADDRESS , CUSTOMERTYPEID)
 			VALUES
 			(
 				<cfqueryparam value = "#arguments.firstName#" cfsqltype = "cf_sql_string" /> ,
 				<cfqueryparam value = "#arguments.lastName#"  cfsqltype = "cf_sql_string" /> ,
-				<cfqueryparam value = "#arguments.email#"     cfsqltype = "cf_sql_string" />
+				<cfqueryparam value = "#arguments.email#"     cfsqltype = "cf_sql_string" /> ,
+				<cfqueryparam value = "#arguments.customerTypeId#" cfsqltype = "cf_sql_numeric" />
 			);
 			SELECT SCOPE_IDENTITY() AS ID
 		</cfquery>

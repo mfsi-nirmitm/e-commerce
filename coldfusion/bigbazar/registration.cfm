@@ -1,20 +1,23 @@
-<cfset variables.cartTotalPrice = 0 />
-<cfset variables.cartarray = ArrayNew (1) />
-<cfif structkeyExists (session , 'cart') >
-	<cfloop array = "#session.cart#" index = "thing">
-		<cfset variables.cartbasket = StructNew() />
-		<cfset variables.cartbasket['productwithsellerid'] = #thing['productwithsellerid']# />
-		<cfset variables.cartbasket['items'] = #thing['items']#  />
-		<cfset variables.cartbasket['productprice'] = #thing['productprice']# />
-		<cfset variables.cartbasket['productname'] = #thing['productname']# />
-		<cfset variables.cartbasket['sellername'] = #thing['sellername']# />
-		<cfset variables.cartbasket['shippingprice'] = #thing['shippingprice']#  />
-		<cfset variables.cartbasket['imageurl'] = #thing['imageurl']# />
-		<cfset ArrayAppend(variables.cartarray, variables.cartbasket) />
-	</cfloop>
-</cfif>
+<cfset variables.billingFirstNameError = "" />
+<cfset variables.passwordError = "" />
+<cfset variables.confirmPasswordError = "" />
+<cfset variables.billingEmailError = "" />
+<cfset variables.billingAddressError = "" />
+<cfset variables.billingStateError = "" />
+<cfset variables.billingCityError = "" />
+<cfset variables.billingZipError = "" />
+<cfset variables.shippingAddressError = "" />
+<cfset variables.shippingStateError= "" />
+<cfset variables.shippingCityError = "" />
+<cfset variables.shippingZipError = "" />
+<cfset variables.cardError = "" />
+<cfset variables.creditCardNameError = "" />
+<cfset variables.creditCardNumberError = "" />
+<cfset variables.creditExpirationMonthError = "" />
+<cfset variables.creditExpirationYearError = "" />
+<cfset variables.cardSecurityCodeError = "" />
 
-
+<cfset variables.customerId = 0 />
 <cfparam name = "form.billing_first_name" default = "" >
 <cfparam name = "form.billing_last_name" default = "" >
 <cfparam name = "form.billing_email" default = "" >
@@ -34,26 +37,6 @@
 <cfparam name = "form.card_security_code" default = "">
 <cfparam name = "form.same_address" default = "off">
 
-<cfset variables.customerId = 0 />
-<cfset variables.tansactionId = 0 />
-<cfset variables.orderCost = 0 />
-<cfset variables.billingFirstNameError = "" />
-<cfset variables.billingEmailError = "" />
-<cfset variables.billingAddressError = "" />
-<cfset variables.billingStateError = "" />
-<cfset variables.billingCityError = "" />
-<cfset variables.billingZipError = "" />
-<cfset variables.shippingAddressError = "" />
-<cfset variables.shippingStateError= "" />
-<cfset variables.shippingCityError = "" />
-<cfset variables.shippingZipError = "" />
-<cfset variables.cardError = "" />
-<cfset variables.creditCardNameError = "" />
-<cfset variables.creditCardNumberError = "" />
-<cfset variables.creditExpirationMonthError = "" />
-<cfset variables.creditExpirationYearError = "" />
-<cfset variables.cardSecurityCodeError = "" />
-
 <cfset variables.isFormValid = true />
 
 <cfif structKeyExists(form,'submit')>
@@ -62,12 +45,31 @@
 		<cfset variables.billingFirstNameError = "Please! enter this field" />
 	</cfif>
 
+	<cfif Trim(form.password) EQ "">
+		<cfset variables.isFormValid = false />
+		<cfset variables.passwordError = "Please! enter this field" />
+	<cfelseif NOT IsValid('regex',Trim(form.password),'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[$@!%*?&])[A-Za-z\d@$!%*?&\s]{4,}$') >
+		<cfset variables.isFormValid = false />
+		<cfset variables.passwordError = "Password length should be minimum 4 and atleat 1 small letter , 1 upper letter , 1 digit and 1 special character _!@$%" />
+	</cfif>
+
+	<cfif Trim(form.confirm_password EQ "")>
+		<cfset variables.isFormValid = false />
+		<cfset variables.confirmPasswordError = "Please! enter this field" />
+	<cfelseif Trim(form.confirm_password) NEQ TRIM(form.password) >
+		<cfset variables.isFormValid = false />
+		<cfset variables.confirmPasswordError = "Passwords should be same" />
+	</cfif>
+
 	<cfif Trim(form.billing_email) EQ "" >
 		<cfset variables.isFormValid = false />
 		<cfset variables.billingEmailError = "Please! enter this field" />
 	<cfelseif NOT IsValid('email', Trim(form.billing_email)) >
 		<cfset variables.isFormValid = false />
 		<cfset variables.billingEmailError = "Please! enter a valid email " />
+	<cfelseif application.userService.haveEmail(Trim(form.billing_email),2)>
+		<cfset variables.isFormValid = false />
+		<cfset variables.billingEmailError = "This email is already registered with us" />
 	</cfif>
 
 	<cfif Trim(form.billing_address) EQ "">
@@ -156,8 +158,7 @@
 	</cfif>
 
 	<cfif variables.isFormValid>
-		<cfset variables.customerId = #Int(application.checkoutService.insertCustomerDetail(Trim(form.billing_first_name),Trim(form.billing_last_name),Trim(form.billing_email),1))# />
-		<cfset session.totalCart['cartCustomerId'] = #variables.customerId# />
+		<cfset variables.customerId = application.userService.registerUser(Trim(form.billing_first_name),Trim(form.billing_last_name),Trim(form.password),Trim(form.billing_email),2) />
 		<cfif form.same_address EQ 'on'>
 			<cfset application.checkoutService.insertCustomerAddress(Trim(form.billing_address),Trim(form.billing_state),Trim(form.billing_city),Trim(form.billing_zip),3,variables.customerId) />
 		<cfelse>
@@ -165,19 +166,9 @@
 			<cfset application.checkoutService.insertCustomerAddress(Trim(form.billing_address),Trim(form.billing_state),Trim(form.billing_city),Trim(form.billing_zip),2,variables.customerId) />
 		</cfif>
 		<cfset application.checkoutService.addPaymentOption(Trim(form.card),Trim(form.credit_card_name),Trim(form.credit_card_number),Trim(form.card_expiration_month),Trim(form.card_expiration_year),variables.customerId) />
-		<cfset variables.tansactionId = #Int(application.checkoutService.addTransaction())# />
-		<cfset session.totalCart['transactionId'] = variables.tansactionId  />
-		<cfif structkeyExists (session , 'cart') >
-			<cfloop array = "#session.cart#" index = "thing">
-				<cfset variables.orderCost = #thing['items']# * ( #thing['productprice']# + #thing['shippingprice']# ) />
-				<cfset application.checkoutService.addOrders(#thing['productwithsellerid']#,#variables.tansactionId#,#thing['items']#,#variables.orderCost# , #variables.customerId# )  />
-			</cfloop>
-			<cfset structdelete(session,'cart') />
-		</cfif>
-		<cflocation url="order-receipt.cfm" addToken="no" />
+		<cflocation url="login.cfm" addToken="no" />
 	</cfif>
 </cfif>
-
 
 
 <!DOCTYPE html>
@@ -254,83 +245,23 @@
 
 	<section id="cart_items">
 		<div class="container head">
-
-			<div class="review-payment">
-				<h2>Review & Payment</h2>
-			</div>
-
-			<div class="table-responsive cart_info">
-				<table class="table table-condensed">
-					<thead>
-						<tr class="cart_menu">
-							<td class="image">Item</td>
-							<td class="description"></td>
-							<td class="price">Price</td>
-							<td class="quantity">Quantity</td>
-							<td class="price">Shipping</td>
-							<td class="total">Total</td>
-						</tr>
-					</thead>
-					<tbody>
-						<cfloop array="#variables.cartarray#" index="thing">
-							<cfoutput>
-								<tr>
-									<td class="cart_product">
-										<a  href=""><img class = "cart_images" src="#thing['imageurl']#" alt=""></a>
-									</td>
-									<td class="cart_description">
-										<h4>#thing['productname']#</h4>
-										<p><b>SELELR : </b>#thing['sellername']#</p>
-									</td>
-									<td class="cart_price">
-										<p>#thing['productprice']# Rs.</p>
-									</td>
-									<td class="cart_quantity">
-										<div class="cart_quantity_button">
-
-											<input class="cart_quantity_input" type="text" name="quantity" value="#thing['items']#" autocomplete="off" size="2" readonly = "readonly" >
-
-										</div>
-									</td>
-									<td class = "cart_price">
-										<p>#thing['shippingprice']# Rs.</p>
-									</td>
-									<cfset variables.totalPrice = "#thing['items']#" * (#thing['productprice']# + #thing['shippingprice']#) />
-									<cfset variables.cartTotalPrice = #variables.cartTotalPrice# + #variables.totalPrice# />
-									<cfset session.totalCart['cartTotalPrice'] = #variables.cartTotalPrice# />
-									<td class="cart_total">
-										<p class="cart_total_price"><span>#variables.totalPrice#</span> Rs.</p>
-									</td>
-								</tr>
-							</cfoutput>
-						</cfloop>
-						<tr>
-							<td colspan="4">&nbsp;</td>
-							<td colspan="2">
-								<table class="table table-condensed total-result">
-									<tr>
-										<td>Total</td>
-										<td><span><cfoutput>#variables.cartTotalPrice#</cfoutput> Rs.</span></td>
-									</tr>
-								</table>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
 			<div class="shopper-informations">
-				<cfform onsubmit = "return submit_form();">
+				<cfform onsubmit = "return register_form();">
 				<cfoutput>
 				<div class="row">
 					<div class="col-sm-4">
 						<div class="shopper-info">
 							<p>Billing Address</p>
-								<cfinput type = "hidden" name = "cartTotalPrice" value = "#variables.cartTotalPrice#" />
 								<span class="error" id = "billing_first_name_error">#variables.billingFirstNameError#</span>
-								<cfinput type="text" placeholder="First Name" value = "" name = "billing_first_name" id = "billing_first_name">
+								<cfinput type="text" placeholder="First Name" value = "form.billing_first_name" name = "billing_first_name" id = "billing_first_name">
 								<cfinput type="text" placeholder="Last Name" value = "" name = "billing_last_name" id = "billing_last_name">
 								<span class="error" id = "billing_email_error">#variables.billingEmailError#</span>
 								<cfinput type="text" placeholder="Email" value = "" name = "billing_email" id = "billing_email">
+								<span class = "error" id = "password_error"></span>
+								<cfinput type = "password" placeholder = "Password" name = "password" id = "password" >
+								<span class = "error" id = "confirm_password_error"></span>
+								<cfinput type = "password" placeholder = "Confirm Password" name  = "confirm_password" id = "confirm_password" >
+
 								<span class="error" id = "billing_address_error">#variables.billingAddressError#</span>
 								<cfinput type="text" placeholder="Address" value = "" name = "billing_address" id = "billing_address">
 								<span class="error" id = "billing_state_error">#variables.billingStateError#</span>
@@ -339,8 +270,6 @@
 								<cfinput type="text" placeholder="City" value = "" name = "billing_city" id = "billing_city">
 								<span class="error" id = "billing_zip_error">#variables.billingZipError#</span>
 								<cfinput type="text" placeholder="zip" value = "" name = "billing_zip" maxlength="6" id = "billing_zip">
-
-
 						</div>
 					</div>
 					<div class="col-sm-4 clearfix">
@@ -406,7 +335,7 @@
 								<span class="error" id = "card_security_code_error">#variables.cardSecurityCodeError#</span>
 								<cfinput type = "text" placeholder = "Security Code" value = "" name = "card_security_code" maxlength = "3" id = "card_security_code">
 
-								<cfinput type = "submit"  class="btn btn-primary" value = "Continue Payment" name = "submit" id = "submit">
+								<cfinput type = "submit"  class="btn btn-primary" value = "Register" name = "submit" id = "submit">
 
 						</div>
 					</div>
