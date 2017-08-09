@@ -164,7 +164,12 @@
 			<cfset application.checkoutService.insertCustomerAddress(Trim(form.billing_address),Trim(form.billing_state),Trim(form.billing_city),Trim(form.billing_zip),2,variables.customerId) />
 		</cfif>
 		<cfset application.checkoutService.addPaymentOption(Trim(form.card),Trim(form.credit_card_name),Trim(form.credit_card_number),Trim(form.card_expiration_month),Trim(form.card_expiration_year),variables.customerId) />
-
+		<cfset application.checkoutService.addTransaction() />
+		<cfif structkeyExists (session , 'cart') >
+			<cfloop array = "#session.cart#" index = "thing">
+				<cfset  />
+			</cfloop>
+		</cfif>
 
 	</cfif>
 </cfif>

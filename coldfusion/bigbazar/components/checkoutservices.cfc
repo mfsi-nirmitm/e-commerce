@@ -72,8 +72,8 @@
 
 	</cffunction>
 
-	<cffunction name = "addOrders" access = "public" returntype = "void" hint = "adding order for customer">
-		<cfquery >
+	<cffunction name = "addTransaction" access = "public" returntype = "string" hint = "adding transaction for customer">
+		<cfquery name = "getTransactionID">
 			INSERT INTO CUSTOMERTRANSACTION
 			( TOTALCOST , DATE  )
 			VALUES
@@ -81,7 +81,13 @@
 				#session.totalCart['cartTotalPrice']# ,
 				GETDATE()
 			);
+			SELECT SCOPE_IDENTITY() AS ID
 		</cfquery>
+		<cfreturn getTransactionID.ID />
+	</cffunction>
+
+	<cffunction name = "addOrders" access = "public" returntype = "void" hint = "adding orders for customer" >
+
 	</cffunction>
 
 </cfcomponent>

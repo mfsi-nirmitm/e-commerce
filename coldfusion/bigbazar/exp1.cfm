@@ -92,6 +92,4 @@ after delete
 <button onclick = "buttonClicked();">click</button>
 --->
 
-<cfoutput>#Int('')#</cfoutput>
-
 
