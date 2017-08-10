@@ -1497,6 +1497,16 @@ h2.title {
   padding: 6px 25px;
 }
 
+.submit_button{
+  background: #FE980F;
+  border: medium none;
+  border-radius: 0;
+  color: #FFFFFF;
+  display: block;
+  font-family: 'Roboto', sans-serif;
+  padding: 6px 25px;
+}
+
 .login-form label{
 
 }

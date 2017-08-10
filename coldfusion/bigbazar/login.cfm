@@ -1,3 +1,26 @@
+
+<cfset variables.emailError = "" />
+<cfset variables.passwordError = "" />
+<cfset variables.isValid = true />
+<cfif structKeyExists(form,'login_submit')>
+	<cfif Trim(form.login_email) eq "" >
+		<cfset variables.isValid = false />
+		<cfset variables.emailError = "Please! enter a valid email i'd"/>
+	</cfif>
+	<cfif Trim(form.login_password) eq "">
+		<cfset variables.isValid = false />
+		<cfset variables.passwordError = "Please! enter a valid password" />
+	</cfif>
+	<cfif variables.isValid >
+		<cfset variables.isValid = application.userService.doLogin(#form.login_email#, #form.login_password#) />
+		<cfif NOT variables.isValid>
+			<cfset variables.passwordError = "Email or Password does not exist" />
+		<cfelse>
+			<cflocation url = "index.cfm" addToken = "no" />
+		</cfif>
+	</cfif>
+</cfif>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,6 +47,7 @@
     <script src="js/jquery.prettyPhoto.js"></script>
     <script src="js/main.js"></script>
 	<script src="js/coldfusion.js"></script>
+	<script src = "js/check-out.js"></script>
 
 </head><!--/head-->
 
@@ -80,14 +104,19 @@
 	<section id="form"><!--form-->
 		<div class="container">
 			<div class="row">
-				<div class="col-sm-4 col-sm-offset-1">
+
+				<div class="col-sm-4 col-sm-offset-2">
 					<div class="login-form"><!--login form-->
 						<h2>Login to your account</h2>
-						<form action="#">
-							<input type="text" placeholder="Name" />
-							<input type="email" placeholder="Email Address" />
-							<button type="submit" class="btn btn-default">Login</button>
-						</form>
+						<cfform onsubmit = "return submit_login();" >
+							<cfoutput>
+								<span class = "error" id = "login_email_error">#variables.emailError#</span>
+								<cfinput type="text" name = "login_email" id = "login_email" placeholder="Email" />
+								<span class = "error" id = "login_password_error">#variables.passwordError#</span>
+								<cfinput type="password" placeholder = "Password" name = "login_password" id = "login_password" />
+								<cfinput type="submit" value = "Login" name = "login_submit" class="btn btn-primary" />
+							</cfoutput>
+						</cfform>
 					</div><!--/login form-->
 				</div>
 				<div class="col-sm-1">
@@ -95,7 +124,7 @@
 				</div>
 				<div class="col-sm-4 padding">
 
-						<p><a href="">New User ? ( Registration )</a></p>
+						<p><a href="registration.cfm">New User ? ( Registration )</a></p>
 						<p><a href="checkout.cfm">Continue as guest user ?</a></p>
 
 				</div>

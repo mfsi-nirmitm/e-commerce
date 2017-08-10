@@ -210,3 +210,20 @@ function register_form()
 		
 	return isValid;
 }
+
+/* for login  */
+var login_fields = ["#login_email","#login_password"];
+function submit_login()
+{
+	var isValid = true;
+	jQuery.each(login_fields,function(index,ids){
+		var val = $(ids).val().trim();
+		if(val === undefined || val === "" || val === null)
+		{	
+			isValid = false;
+			var newid = ids+"_error";
+			$(newid).html("Please! enter this field");
+		}
+	});
+	return isValid;
+}

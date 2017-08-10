@@ -67,7 +67,11 @@
 							<ul class="nav navbar-nav">
 								<li><a href="index.cfm">Home</a></li>
 								<li><a href="cart.cfm"><i class="fa fa-shopping-cart"></i> Cart</a></li>
-								<li><a href="login.cfm"><i class="fa fa-lock"></i> Login</a></li>
+								<cfif structKeyExists(session,'loggedIn') >
+									<li><a>Hello <cfoutput>#session.loggedIn['customerName']# !</cfoutput></a></li>
+								<cfelse>
+									<li><a href="login.cfm"><i class="fa fa-lock"></i> Login</a></li>
+								</cfif>
 							</ul>
 						</div>
 					</div>

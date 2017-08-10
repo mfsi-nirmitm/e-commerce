@@ -12,7 +12,11 @@
 
 <!--- adding item to the cart --->
 <cfif structkeyExists(FORM,'submit')>
-	<cfset application.cartService.addCartForGuestUser(#resultProductDetail.PRODUCTWITHSELLERID#,#form.items#,#resultProductDetail.PRICE#,#resultProductDetail.PRODUCTNAME#,#resultProductDetail.SELLERNAME#, #resultProductDetail.SHIPPINGPRICE#,#resultProductDetail.IMAGEURL#) />
+	<cfif structKeyExists(session,'loggedIn') >
+		<cfset application.userService.addCartForRegisteredUser(#resultProductDetail.PRODUCTWITHSELLERID#,#session.loggedIn['customerID']#,#form.items#) />
+	<cfelse>
+		<cfset application.cartService.addCartForGuestUser(#resultProductDetail.PRODUCTWITHSELLERID#,#form.items#,#resultProductDetail.PRICE#,#resultProductDetail.PRODUCTNAME#,#resultProductDetail.SELLERNAME#, #resultProductDetail.SHIPPINGPRICE#,#resultProductDetail.IMAGEURL#) />
+	</cfif>
 	<cflocation url="cart.cfm" addToken="no" />
 </cfif>
 
@@ -79,7 +83,11 @@
 							<ul class="nav navbar-nav">
 								<li><a href="index.cfm">Home</a></li>
 								<li><a href="cart.cfm"><i class="fa fa-shopping-cart"></i> Cart</a></li>
-								<li><a href="login.cfm"><i class="fa fa-lock"></i> Login</a></li>
+								<cfif structKeyExists(session,'loggedIn') >
+									<li><a>Hello <cfoutput>#session.loggedIn['customerName']# !</cfoutput></a></li>
+								<cfelse>
+									<li><a href="login.cfm"><i class="fa fa-lock"></i> Login</a></li>
+								</cfif>
 							</ul>
 						</div>
 					</div>
