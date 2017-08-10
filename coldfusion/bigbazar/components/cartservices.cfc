@@ -55,7 +55,15 @@
 	<cffunction name = "addProductByProductWithSellerID" access = "remote"  returntype = "void" hint = "adding an product from the cart" >
 		<cfargument name = 'productWithSellerID' required = "true" type = "numeric" />
 
-		<cfif structkeyExists (session , 'cart') >
+		<cfif structKeyExists(session,'loggedIn')>
+			<cfset local.customerID = #session.loggedIn['customerID']# />
+			<cfquery >
+				UPDATE CART
+				SET ITEMS = ITEMS + 1
+				WHERE PRODUCTWITHSELLERID = <cfqueryparam value = "#arguments.productWithSellerID#" cfsqltype = "cf_sql_numeric" />
+				AND CUSTOMERID = <cfqueryparam value = "#local.customerID#" cfsqltype = "cf_sql_numeric" />
+			</cfquery>
+		<cfelseif structkeyExists (session , 'cart') >
 			<cfloop index = "i" from ="1" to="#ArrayLen(session.cart)#" >
 				<cfif #session.cart[i].productwithsellerid#  eq arguments.productWithSellerID>
 					<cfset #session.cart[i].items# = #session.cart[i].items# + 1 />
@@ -68,7 +76,15 @@
 	<cffunction name = "decrementProductByProductWithSellerID" access = "remote" returntype = "void" hint = "decrement an product form the cart">
 		<cfargument name = "productWithSellerID" required ="true" type = "numeric" />
 
-		<cfif structKeyExists(session, 'cart')>
+		<cfif structKeyExists(session,'loggedIn')>
+			<cfset local.customerID = #session.loggedIn['customerID']# />
+			<cfquery >
+				UPDATE CART
+				SET ITEMS = ITEMS - 1
+				WHERE PRODUCTWITHSELLERID = <cfqueryparam value = "#arguments.productWithSellerID#" cfsqltype = "cf_sql_numeric" />
+				AND CUSTOMERID = <cfqueryparam value = "#local.customerID#" cfsqltype = "cf_sql_numeric" />
+			</cfquery>
+		<cfelseif structKeyExists(session, 'cart')>
 			<cfloop index = "i" from = "1" to ="#ArrayLen(session.cart)#" >
 				<cfif #session.cart[i].productwithsellerid# eq arguments.productWithSellerID >
 					<cfset #session.cart[i].items# = #session.cart[i].items# -1 />
@@ -92,7 +108,14 @@
 	<cffunction name = "removeProductByProductWithSellerID" access = "remote" returntype = "void" hint = "removing an product" >
 		<cfargument name = "productWithSellerID" required = "true" type = "numeric" />
 		<cfset local.targetIndex = 0 />
-		<cfif structkeyExists(session,'cart')>
+		<cfif structKeyExists(session, 'loggedIn')>
+			<cfset local.customerID = #session.loggedIn['customerID']# />
+			<cfquery name = "removeProduct">
+				DELETE Cart
+				WHERE PRODUCTWITHSELLERID = <cfqueryparam value = "#arguments.productWithSellerID#" cfsqltype = "cf_sql_numeric" />
+				AND CUSTOMERID = <cfqueryparam value = "#local.customerID#" cfsqltype = "cf_sql_numeric" />
+			</cfquery>
+		<cfelseif structkeyExists(session,'cart')>
 			<cfloop index ="i" from = "1" to = "#ArrayLen(session.cart)#" >
 				<cfif #session.cart[i].productwithsellerid# eq #arguments.productWithSellerID# >
 					<cfset local.targetIndex = #i#  />

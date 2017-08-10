@@ -57,3 +57,4 @@
 	<p> #getAddress.ADDRESSTYPEID[2]# - #getAddress.CUSTOMERADDRESS[2]# - #getAddress.CUSTOMERSTATE[2]# - #getAddress.CUSTOMERCITY[2]# - #getAddress.CUSTOMERZIPCODE[2]#</p>
 </cfoutput>
 --->
+<cfset structDelete(session,'loggedIn') />

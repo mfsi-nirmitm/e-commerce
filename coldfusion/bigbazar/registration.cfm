@@ -253,7 +253,7 @@
 						<div class="shopper-info">
 							<p>Billing Address</p>
 								<span class="error" id = "billing_first_name_error">#variables.billingFirstNameError#</span>
-								<cfinput type="text" placeholder="First Name" value = "form.billing_first_name" name = "billing_first_name" id = "billing_first_name">
+								<cfinput type="text" placeholder="First Name" value = "#form.billing_first_name#" name = "billing_first_name" id = "billing_first_name">
 								<cfinput type="text" placeholder="Last Name" value = "" name = "billing_last_name" id = "billing_last_name">
 								<span class="error" id = "billing_email_error">#variables.billingEmailError#</span>
 								<cfinput type="text" placeholder="Email" value = "" name = "billing_email" id = "billing_email">

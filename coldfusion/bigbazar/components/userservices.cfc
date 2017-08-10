@@ -59,11 +59,17 @@
 			AND CUS.EMAILADDRESS = <cfqueryparam  value = "#arguments.loginEmail#" cfsqltype = "cf_sql_string" />
 			AND CUSLOG.PASSWORD = <cfqueryparam value = "#arguments.password#" cfsqltype = "cf_sql_string" />
 		</cfquery>
-		<cfif getLogin.RecordCount eq 0>
+		<cfif getLogin.RecordCount eq 0 >
 			<cfset local.isValid = false />
 		<cfelse>
 			<cfset session.loggedIn['customerID'] = #getLogin.CUSTOMERID# />
 			<cfset session.loggedIn['customerName'] = #getLogin.FIRSTNAME# />
+			<cfif structKeyExists(session,'cart')>
+				<cfloop array = "#session.cart#" index = "thing">
+					<cfset addCartForRegisteredUser(#thing['productwithsellerid']#,#session.loggedIn['customerID']#,#thing['items']#) />
+				</cfloop>
+				<cfset structDelete(session,'cart') />
+			</cfif>
 		</cfif>
 
 		<cfreturn local.isValid />
@@ -100,5 +106,44 @@
 			</cfquery>
 		</cfif>
 
+	</cffunction>
+
+	<cffunction name = "getCartOfRegisteredUser" access = "public" returntype = "query" hint = "getting the cart for registered user">
+		<cfargument name = "customerID" required = "true" type = "numeric" hint = "customer id to identify the customer" />
+
+		<cfquery name = "getCart">
+			SELECT C.CUSTOMERID , C.PRODUCTWITHSELLERID , C.ITEMS ,PWS.PRICE, PWS.SHIPPINGPRICE ,PWS.IMAGEURL , S.SELLERNAME , P.PRODUCTNAME
+			FROM CART AS C
+			INNER JOIN PRODUCTSWITHSELLERS AS PWS
+			ON PWS.PRODUCTWITHSELLERID = C.PRODUCTWITHSELLERID
+			AND C.CUSTOMERID = <cfqueryparam value = "#arguments.customerID#" cfsqltype = "cf_sql_numeric" />
+			INNER JOIN SELLER AS S
+			ON PWS.SELLERID = S.SELLERID
+			INNER JOIN PRODUCT AS P
+			ON P.PRODUCTID = PWS.PRODUCTID
+		</cfquery>
+
+		<cfreturn getCart />
+	</cffunction>
+
+	<cffunction name = "getUserDetail" access = "public" returntype = "query" hint = "getting the detail of user">
+		<cfargument name  = "customerID" required = "true" type = "numeric" hint = "detail of the customer" />
+
+		<cfquery name = "userDetail">
+			SELECT FIRSTNAME , SECONDNAME, EMAILADDRESS
+			FROM CUSTOMER
+			WHERE CUSTOMERID = <cfqueryparam value = "#arguments.customerID#" cfsqltype = "cf_sql_type" />
+		</cfquery>
+		<cfreturn userDetail />
+	</cffunction>
+
+	<cffunction name = "getUserPaymentDetail" access = "public" returntype = "query" hint = "getting the detail of payment">
+		<cfargument name = "customerID" required = "true" type = "numeric" hint = "detail of customer payment" />
+		<cfquery name = "getPaymentDetail">
+			SELECT CREDITCARDTYPE , NAMEONCREDITCARD , CREDITCARDNUMBER , CREDITCARDEXPIRATIONMONTH , CREDITCARDEXPIRATIONYEAR
+			FROM PAYMENT
+			WHERE CUSTOMERID = <cfqueryparam value = "#arguments.customerID#" cfsqltype = "cf_sql_numeric" />
+		</cfquery>
+		<cfreturn getPaymentDetail />
 	</cffunction>
 </cfcomponent>

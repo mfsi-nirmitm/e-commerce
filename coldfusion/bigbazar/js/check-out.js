@@ -227,3 +227,13 @@ function submit_login()
 	});
 	return isValid;
 }
+$(document).ready(function(){
+	if($("#same_address").prop("checked"))
+	{
+		$(".bill-to #bill_add").hide();
+	}
+	else
+	{
+		$(".bill-to #bill_add").show();
+	}
+});

@@ -1,6 +1,21 @@
 <cfset variables.cartTotalPrice = 0 />
 <cfset variables.cartarray = ArrayNew (1) />
-<cfif structkeyExists (session , 'cart') >
+
+
+<cfif structKeyExists(session,'loggedIn')>
+	<cfset variables.getCartLoggedInUser = application.userService.getCartOfRegisteredUser(#session.loggedIn['customerID']#) />
+	<cfoutput query="variables.getCartLoggedInUser">
+		<cfset variables.cartbasket = StructNew() />
+		<cfset variables.cartbasket['productwithsellerid'] = #variables.getCartLoggedInUser.PRODUCTWITHSELLERID# />
+		<cfset variables.cartbasket['items'] = #variables.getCartLoggedInUser.ITEMS# />
+		<cfset variables.cartbasket['productprice'] = #variables.getCartLoggedInUser.PRICE# />
+		<cfset variables.cartbasket['productname'] = #variables.getCartLoggedInUser.PRODUCTNAME# />
+		<cfset variables.cartbasket['sellername'] = #variables.getCartLoggedInUser.SELLERNAME# />
+		<cfset variables.cartbasket['shippingprice'] = #variables.getCartLoggedInUser.SHIPPINGPRICE# />
+		<cfset variables.cartbasket['imageurl'] = #variables.getCartLoggedInUser.IMAGEURL# />
+		<cfset ArrayAppend(variables.cartarray, variables.cartbasket) />
+	</cfoutput>
+<cfelseif structkeyExists (session , 'cart') >
 	<cfloop array = "#session.cart#" index = "thing">
 		<cfset variables.cartbasket = StructNew() />
 		<cfset variables.cartbasket['productwithsellerid'] = #thing['productwithsellerid']# />
@@ -13,7 +28,6 @@
 		<cfset ArrayAppend(variables.cartarray, variables.cartbasket) />
 	</cfloop>
 </cfif>
-
 
 <cfparam name = "form.billing_first_name" default = "" >
 <cfparam name = "form.billing_last_name" default = "" >
@@ -33,6 +47,30 @@
 <cfparam name = "form.card_expiration_year" default = "">
 <cfparam name = "form.card_security_code" default = "">
 <cfparam name = "form.same_address" default = "off">
+<cfset variables.sameAddress = "false" />
+<cfif structKeyExists(session, 'loggedIn')>
+	<cfset variables.getUserDetail = application.userService.getUserDetail("#session.loggedIn['customerID']#") />
+	<cfset form.billing_first_name = "#variables.getUserDetail.FIRSTNAME#" />
+	<cfset form.billing_last_name = "#variables.getUserDetail.SECONDNAME#" />
+	<cfset form.billing_email = "#variables.getUserDetail.EMAILADDRESS#" />
+	<cfset variables.getAddress = application.orderService.getAddress(#session.loggedIn['customerID']#) />
+	<cfset variables.index =1 />
+	<cfset form.billing_address = "#variables.getAddress.CUSTOMERADDRESS[variables.index]#" />
+	<cfset form.billing_city = "#getAddress.CUSTOMERCITY[variables.index]#" />
+	<cfset form.billing_state = "#getAddress.CUSTOMERSTATE[variables.index]#" />
+	<cfset form.billing_zip = "#getAddress.CUSTOMERZIPCODE[variables.index]#" />
+	<cfif #getAddress.ADDRESSTYPEID[1]# NEQ 3>
+		<cfset variables.index = 2 />
+	<cfelse>
+		<cfset variables.sameAddress = "true" />
+	</cfif>
+	<cfset form.shipping_address = "#variables.getAddress.CUSTOMERADDRESS[variables.index]#" />
+	<cfset form.shipping_city = "#getAddress.CUSTOMERCITY[variables.index]#" />
+	<cfset form.shipping_state = "#getAddress.CUSTOMERSTATE[variables.index]#" />
+	<cfset form.shipping_zip = "#getAddress.CUSTOMERZIPCODE[variables.index]#" />
+	<cfset variables.getPaymentDetail  = application.userService.getUserPaymentDetail(#session.loggedIn['customerID']#) />
+</cfif>
+
 
 <cfset variables.customerId = 0 />
 <cfset variables.tansactionId = 0 />
@@ -243,7 +281,11 @@
 							<ul class="nav navbar-nav">
 								<li><a href="index.cfm">Home</a></li>
 								<li><a href="cart.cfm"><i class="fa fa-shopping-cart"></i> Cart</a></li>
-								<li><a href="login.cfm"><i class="fa fa-lock"></i> Login</a></li>
+								<cfif structKeyExists(session,'loggedIn') >
+									<li><a>Hello <cfoutput>#session.loggedIn['customerName']# !</cfoutput></a></li>
+								<cfelse>
+									<li><a href="login.cfm"><i class="fa fa-lock"></i> Login</a></li>
+								</cfif>
 							</ul>
 						</div>
 					</div>
@@ -327,18 +369,18 @@
 							<p>Billing Address</p>
 								<cfinput type = "hidden" name = "cartTotalPrice" value = "#variables.cartTotalPrice#" />
 								<span class="error" id = "billing_first_name_error">#variables.billingFirstNameError#</span>
-								<cfinput type="text" placeholder="First Name" value = "" name = "billing_first_name" id = "billing_first_name">
-								<cfinput type="text" placeholder="Last Name" value = "" name = "billing_last_name" id = "billing_last_name">
+								<cfinput type="text" placeholder="First Name" value = "#form.billing_first_name#" name = "billing_first_name" id = "billing_first_name">
+								<cfinput type="text" placeholder="Last Name" value = "#form.billing_last_name#" name = "billing_last_name" id = "billing_last_name">
 								<span class="error" id = "billing_email_error">#variables.billingEmailError#</span>
-								<cfinput type="text" placeholder="Email" value = "" name = "billing_email" id = "billing_email">
+								<cfinput type="text" placeholder="Email" value = "#form.billing_email#" name = "billing_email" id = "billing_email">
 								<span class="error" id = "billing_address_error">#variables.billingAddressError#</span>
-								<cfinput type="text" placeholder="Address" value = "" name = "billing_address" id = "billing_address">
+								<cfinput type="text" placeholder="Address" value = "#form.billing_address#" name = "billing_address" id = "billing_address">
 								<span class="error" id = "billing_state_error">#variables.billingStateError#</span>
-								<cfinput type="text" placeholder="State" value = "" name = "billing_state" id = "billing_state">
+								<cfinput type="text" placeholder="State" value = "#form.billing_state#" name = "billing_state" id = "billing_state">
 								<span class="error" id = "billing_city_error">#variables.billingCityError#</span>
-								<cfinput type="text" placeholder="City" value = "" name = "billing_city" id = "billing_city">
+								<cfinput type="text" placeholder="City" value = "#form.billing_city#" name = "billing_city" id = "billing_city">
 								<span class="error" id = "billing_zip_error">#variables.billingZipError#</span>
-								<cfinput type="text" placeholder="zip" value = "" name = "billing_zip" maxlength="6" id = "billing_zip">
+								<cfinput type="text" placeholder="zip" value = "#form.billing_zip#" name = "billing_zip" maxlength="6" id = "billing_zip">
 
 
 						</div>
@@ -346,16 +388,16 @@
 					<div class="col-sm-4 clearfix">
 						<div class="bill-to">
 							<p>Shipping Address</p>
-								<label><cfinput type="checkbox" name = "same_address" id = "same_address" > Same address as billing address</label>
+								<label><cfinput type="checkbox" name = "same_address" id = "same_address" checked = "#variables.sameAddress#"> Same address as billing address</label>
 								<div id = "bill_add">
 									<span class="error" id = "shipping_address_error">#variables.shippingAddressError#</span>
-									<cfinput type="text" placeholder="Shipping Address" value = "" name = "shipping_address" id = "shipping_address">
+									<cfinput type="text" placeholder="Shipping Address" value = "#form.shipping_address#" name = "shipping_address" id = "shipping_address">
 									<span class="error" id = "shipping_state_error">#variables.shippingStateError#</span>
-									<cfinput type="text" placeholder="State" value = "" name = "shipping_state" id = "shipping_state">
+									<cfinput type="text" placeholder="State" value = "#form.shipping_state#" name = "shipping_state" id = "shipping_state">
 									<span class="error" id = "shipping_city_error">#variables.shippingCityError#</span>
-									<cfinput type="text" placeholder="City" value = "" name = "shipping_city" id = "shipping_city">
+									<cfinput type="text" placeholder="City" value = "#form.shipping_city#" name = "shipping_city" id = "shipping_city">
 									<span class="error" id = "shipping_zip_error">#variables.shippingZipError#</span>
-									<cfinput type="text" placeholder="zip" value = "" name = "shipping_zip" maxlength="6" id = "shipping_zip">
+									<cfinput type="text" placeholder="zip" value = "#form.shipping_zip#" name = "shipping_zip" maxlength="6" id = "shipping_zip">
 								</div>
 						</div>
 					</div>
@@ -425,7 +467,6 @@
 			<div class="container">
 				<div class="row">
 					<p class="pull-left">Copyright © 2013 E-SHOPPER Inc. All rights reserved.</p>
-					<p class="pull-right">Designed by <span><a target="_blank" href="http://www.themeum.com">Themeum</a></span></p>
 				</div>
 			</div>
 		</div>
