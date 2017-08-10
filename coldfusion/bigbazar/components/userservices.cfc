@@ -146,4 +146,26 @@
 		</cfquery>
 		<cfreturn getPaymentDetail />
 	</cffunction>
+
+	<cffunction name = "removeAddress" access= "public" returntype = "void" hint = "removing the address of customer">
+		<cfargument name = "customerID" required = "true" type = "numeric" hint = "i'd of customer" />
+		<cfquery>
+			DELETE CUSTOMERADDRESS
+			WHERE CUSTOMERID = <cfqueryparam value = "#arguments.customerID#" cfsqltype = "cf_sql_numeric" />
+		</cfquery>
+	</cffunction >
+	<cffunction name = "removePayment" access = "public" returntype = "void" hint = "removing the payment detail of the user">
+		<cfargument name = "customerID" required = "true" type = "numeric" cfsqltype = "cf_sql_numeric" />
+		<cfquery>
+			DELETE PAYMENT
+			WHERE CUSTOMERID = <cfqueryparam value = "#arguments.customerID#" cfsqltype = "cf_sql_numeric" />
+		</cfquery>
+	</cffunction>
+	<cffunction name = "removeCart" access = "public" returntype = "void" hint = "removing the cart after transction payment">
+		<cfargument name = "customerID" required = "true" type = "numeric" hint = "i'd of customer" />
+		<cfquery>
+			DELETE CART
+			WHERE CUSTOMERID = <cfqueryparam value = "#arguments.customerID#" cfsqltype = "cf_sql_numeric" />
+		</cfquery>
+	</cffunction>
 </cfcomponent>

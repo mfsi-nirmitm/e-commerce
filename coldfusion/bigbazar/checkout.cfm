@@ -69,6 +69,11 @@
 	<cfset form.shipping_state = "#getAddress.CUSTOMERSTATE[variables.index]#" />
 	<cfset form.shipping_zip = "#getAddress.CUSTOMERZIPCODE[variables.index]#" />
 	<cfset variables.getPaymentDetail  = application.userService.getUserPaymentDetail(#session.loggedIn['customerID']#) />
+	<cfset form.card = "#variables.getPaymentDetail.CREDITCARDTYPE#" />
+	<cfset form.credit_card_name = "#variables.getPaymentDetail.NAMEONCREDITCARD#" />
+	<cfset form.credit_card_number = "#variables.getPaymentDetail.CREDITCARDNUMBER#" />
+	<cfset form.card_expiration_month =  "#variables.getPaymentDetail.CREDITCARDEXPIRATIONMONTH#" />
+	<cfset form.card_expiration_year = "#variables.getPaymentDetail.CREDITCARDEXPIRATIONYEAR#" />
 </cfif>
 
 
@@ -193,24 +198,39 @@
 		<cfset variables.cardSecurityCodeError = "Please! enter a valid 3 digit security code" />
 	</cfif>
 
-	<cfif variables.isFormValid>
-		<cfset variables.customerId = #Int(application.checkoutService.insertCustomerDetail(Trim(form.billing_first_name),Trim(form.billing_last_name),Trim(form.billing_email),1))# />
-		<cfset session.totalCart['cartCustomerId'] = #variables.customerId# />
-		<cfif form.same_address EQ 'on'>
-			<cfset application.checkoutService.insertCustomerAddress(Trim(form.billing_address),Trim(form.billing_state),Trim(form.billing_city),Trim(form.billing_zip),3,variables.customerId) />
+	<cfif variables.isFormValid >
+		<cfif NOT structKeyExists(session,'loggedIn')>
+			<cfset variables.customerId = #Int(application.checkoutService.insertCustomerDetail(Trim(form.billing_first_name),Trim(form.billing_last_name),Trim(form.billing_email),1))# />
+			<cfset session.totalCart['cartCustomerId'] = #variables.customerId# />
 		<cfelse>
-			<cfset application.checkoutService.insertCustomerAddress(Trim(form.shipping_address),Trim(form.shipping_state),Trim(form.shipping_city),Trim(form.shipping_zip),1,variables.customerId) />
-			<cfset application.checkoutService.insertCustomerAddress(Trim(form.billing_address),Trim(form.billing_state),Trim(form.billing_city),Trim(form.billing_zip),2,variables.customerId) />
+
+			<cfset session.totalCart['cartCustomerId'] = #session.loggedIn['customerID']# />
+			<cfset application.userService.removeAddress(#session.loggedIn['customerID']#) />
+			<cfset application.userService.removePayment(#session.loggedIn['customerID']#) />
 		</cfif>
-		<cfset application.checkoutService.addPaymentOption(Trim(form.card),Trim(form.credit_card_name),Trim(form.credit_card_number),Trim(form.card_expiration_month),Trim(form.card_expiration_year),variables.customerId) />
+
+		<cfif form.same_address EQ 'on'>
+			<cfset application.checkoutService.insertCustomerAddress(Trim(form.billing_address),Trim(form.billing_state),Trim(form.billing_city),Trim(form.billing_zip),3,#session.totalCart['cartCustomerId']#) />
+		<cfelse>
+			<cfset application.checkoutService.insertCustomerAddress(Trim(form.shipping_address),Trim(form.shipping_state),Trim(form.shipping_city),Trim(form.shipping_zip),1,#session.totalCart['cartCustomerId']#) />
+			<cfset application.checkoutService.insertCustomerAddress(Trim(form.billing_address),Trim(form.billing_state),Trim(form.billing_city),Trim(form.billing_zip),2,#session.totalCart['cartCustomerId']#) />
+		</cfif>
+		<cfset application.checkoutService.addPaymentOption(Trim(form.card),Trim(form.credit_card_name),Trim(form.credit_card_number),Trim(form.card_expiration_month),Trim(form.card_expiration_year),#session.totalCart['cartCustomerId']#) />
 		<cfset variables.tansactionId = #Int(application.checkoutService.addTransaction())# />
 		<cfset session.totalCart['transactionId'] = variables.tansactionId  />
 		<cfif structkeyExists (session , 'cart') >
 			<cfloop array = "#session.cart#" index = "thing">
 				<cfset variables.orderCost = #thing['items']# * ( #thing['productprice']# + #thing['shippingprice']# ) />
-				<cfset application.checkoutService.addOrders(#thing['productwithsellerid']#,#variables.tansactionId#,#thing['items']#,#variables.orderCost# , #variables.customerId# )  />
+				<cfset application.checkoutService.addOrders(#thing['productwithsellerid']#,#variables.tansactionId#,#thing['items']#,#variables.orderCost# , #session.totalCart['cartCustomerId']# )  />
 			</cfloop>
 			<cfset structdelete(session,'cart') />
+		<cfelseif structKeyExists(session , 'loggedIn')>
+			<cfset variables.getCart = application.userService.getCartOfRegisteredUser(#session.loggedIn['customerID']#) />
+			<cfoutput query= "variables.getCart">
+				<cfset variables.orderCost = #variables.getCart.ITEMS# * ( #variables.getCart.PRICE# + #variables.getCart.SHIPPINGPRICE# ) />
+				<cfset application.checkoutService.addOrders(#variables.getCart.PRODUCTWITHSELLERID#,#variables.tansactionId# , #variables.getCart.ITEMS# , #variables.orderCost#,#session.totalCart['cartCustomerId']#) />
+			</cfoutput>
+				<cfset application.userService.removeCart(#session.loggedIn['customerID']#)>
 		</cfif>
 		<cflocation url="order-receipt.cfm" addToken="no" />
 	</cfif>
@@ -368,11 +388,13 @@
 						<div class="shopper-info">
 							<p>Billing Address</p>
 								<cfinput type = "hidden" name = "cartTotalPrice" value = "#variables.cartTotalPrice#" />
-								<span class="error" id = "billing_first_name_error">#variables.billingFirstNameError#</span>
-								<cfinput type="text" placeholder="First Name" value = "#form.billing_first_name#" name = "billing_first_name" id = "billing_first_name">
-								<cfinput type="text" placeholder="Last Name" value = "#form.billing_last_name#" name = "billing_last_name" id = "billing_last_name">
-								<span class="error" id = "billing_email_error">#variables.billingEmailError#</span>
-								<cfinput type="text" placeholder="Email" value = "#form.billing_email#" name = "billing_email" id = "billing_email">
+								<cfif NOT structKeyExists(session,'loggedIn')>
+									<span class="error" id = "billing_first_name_error">#variables.billingFirstNameError#</span>
+									<cfinput type="text" placeholder="First Name" value = "#form.billing_first_name#" name = "billing_first_name" id = "billing_first_name"  >
+									<cfinput type="text" placeholder="Last Name" value = "#form.billing_last_name#" name = "billing_last_name" id = "billing_last_name">
+									<span class="error" id = "billing_email_error">#variables.billingEmailError#</span>
+									<cfinput type="text" placeholder="Email" value = "#form.billing_email#" name = "billing_email" id = "billing_email">
+								</cfif>
 								<span class="error" id = "billing_address_error">#variables.billingAddressError#</span>
 								<cfinput type="text" placeholder="Address" value = "#form.billing_address#" name = "billing_address" id = "billing_address">
 								<span class="error" id = "billing_state_error">#variables.billingStateError#</span>
@@ -408,42 +430,41 @@
 
 								<cfselect name = "card" id = "card">
 									<option value = "" >--- Payment Card Type ---</option>
-									<option value = "visa">VISA</option>
-									<option value = "master_card">MASTER CARD</option>
-									<option value = "rupay">RUPAY</option>
+									<option value = "visa" <cfif form.card EQ "visa"> selected = "selected"</cfif>  >VISA</option>
+									<option value = "master_card" <cfif form.card EQ "master_card"> selected = "selected"</cfif> >MASTER CARD</option>
+									<option value = "rupay" <cfif form.card EQ "rupay"> selected = "selected"</cfif>  >RUPAY</option>
 								</cfselect>
 								<span class="error" id = "credit_card_name_error" >#variables.creditCardNameError#</span>
-								<cfinput type = "text"  placeholder = "Name on Credit Card" value = "" name = "credit_card_name" id = "credit_card_name">
+								<cfinput type = "text"  placeholder = "Name on Credit Card" value = "#form.credit_card_name#" name = "credit_card_name" id = "credit_card_name">
 								<span class="error" id = "credit_card_number_error">#variables.creditCardNumberError#</span>
-								<cfinput type = "text" placeholder = "Credit Card Number" value = "" name = "credit_card_number" maxlength="12" id = "credit_card_number">
+								<cfinput type = "text" placeholder = "Credit Card Number" value = "#form.credit_card_number#" name = "credit_card_number" maxlength="12" id = "credit_card_number">
 								<span class="error" id = "card_expiration_month_error">#variables.creditExpirationMonthError#</span>
 								<cfselect name = "card_expiration_month" id = "card_expiration_month" >
 									<option value = "" >--- Credit Card Expiration Month ---</option>
-									<option value = "1" >1</option>
-									<option value = "2" >2</option>
-									<option value = "3" >3</option>
-									<option value = "4" >4</option>
-									<option value = "5" >5</option>
-									<option value = "6" >6</option>
-									<option value = "7" >7</option>
-									<option value = "8" >8</option>
-									<option value = "9" >9</option>
-									<option value = "10" >10</option>
-									<option value = "11" >11</option>
-									<option value = "12" >12</option>
+									<option value = "1" <cfif form.card_expiration_month EQ "1"> selected = "selected"</cfif> >1</option>
+									<option value = "2" <cfif form.card_expiration_month EQ "2"> selected = "selected"</cfif>>2</option>
+									<option value = "3" <cfif form.card_expiration_month EQ "3"> selected = "selected"</cfif>>3</option>
+									<option value = "4" <cfif form.card_expiration_month EQ "4"> selected = "selected"</cfif>>4</option>
+									<option value = "5" <cfif form.card_expiration_month EQ "5"> selected = "selected"</cfif>>5</option>
+									<option value = "6" <cfif form.card_expiration_month EQ "6"> selected = "selected"</cfif>>6</option>
+									<option value = "7" <cfif form.card_expiration_month EQ "7"> selected = "selected"</cfif>>7</option>
+									<option value = "8" <cfif form.card_expiration_month EQ "8"> selected = "selected"</cfif>>8</option>
+									<option value = "9" <cfif form.card_expiration_month EQ "9"> selected = "selected"</cfif>>9</option>
+									<option value = "10" <cfif form.card_expiration_month EQ "10"> selected = "selected"</cfif>>10</option>
+									<option value = "11" <cfif form.card_expiration_month EQ "11"> selected = "selected"</cfif>>11</option>
+									<option value = "12" <cfif form.card_expiration_month EQ "12"> selected = "selected"</cfif>>12</option>
 								</cfselect>
 								<span class="error" id = "card_expiration_year_error">#variables.creditExpirationYearError#</span>
 								<cfselect name = "card_expiration_year" id = "card_expiration_year" >
 									<option value = "">--- Credit Card Expiration Year ---</option>
-									<option value = "2017">2017</option>
-									<option value = "2018">2018</option>
-									<option value = "2019">2019</option>
-									<option value = "2020">2020</option>
-									<option value = "2021">2021</option>
-									<option value = "2022">2022</option>
-									<option value = "2023">2023</option>
-									<option value = "2024">2024</option>
-									<option value = "2025">2025</option>
+									<option value = "2018" <cfif form.card_expiration_year EQ "2018"> selected = "selected"</cfif> >2018</option>
+									<option value = "2019" <cfif form.card_expiration_year EQ "2019"> selected = "selected"</cfif>>2019</option>
+									<option value = "2020" <cfif form.card_expiration_year EQ "2020"> selected = "selected"</cfif>>2020</option>
+									<option value = "2021" <cfif form.card_expiration_year EQ "2021"> selected = "selected"</cfif>>2021</option>
+									<option value = "2022" <cfif form.card_expiration_year EQ "2022"> selected = "selected"</cfif>>2022</option>
+									<option value = "2023" <cfif form.card_expiration_year EQ "2023"> selected = "selected"</cfif>>2023</option>
+									<option value = "2024" <cfif form.card_expiration_year EQ "2024"> selected = "selected"</cfif>>2024</option>
+									<option value = "2025" <cfif form.card_expiration_year EQ "2025"> selected = "selected"</cfif>>2025</option>
 								</cfselect>
 								<span class="error" id = "card_security_code_error">#variables.cardSecurityCodeError#</span>
 								<cfinput type = "text" placeholder = "Security Code" value = "" name = "card_security_code" maxlength = "3" id = "card_security_code">
