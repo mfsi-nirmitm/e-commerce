@@ -13,8 +13,10 @@
 <!--- adding item to the cart --->
 <cfif structkeyExists(FORM,'submit')>
 	<cfif structKeyExists(session,'loggedIn') >
+		<!--- adding the cart for logged in user --->
 		<cfset application.userService.addCartForRegisteredUser(#resultProductDetail.PRODUCTWITHSELLERID#,#session.loggedIn['customerID']#,#form.items#) />
 	<cfelse>
+		<!--- adding the cart for guest user --->
 		<cfset application.cartService.addCartForGuestUser(#resultProductDetail.PRODUCTWITHSELLERID#,#form.items#,#resultProductDetail.PRICE#,#resultProductDetail.PRODUCTNAME#,#resultProductDetail.SELLERNAME#, #resultProductDetail.SHIPPINGPRICE#,#resultProductDetail.IMAGEURL#) />
 	</cfif>
 	<cflocation url="cart.cfm" addToken="no" />
@@ -84,6 +86,7 @@
 								<li><a href="index.cfm">Home</a></li>
 								<li><a href="cart.cfm"><i class="fa fa-shopping-cart"></i> Cart</a></li>
 								<cfif structKeyExists(session,'loggedIn') >
+									<!--- checking the session for logged in user --->
 									<li><a>Hello <cfoutput>#session.loggedIn['customerName']# !</cfoutput></a></li>
 								<cfelse>
 									<li><a href="login.cfm"><i class="fa fa-lock"></i> Login</a></li>
@@ -103,6 +106,7 @@
 					<div class="left-sidebar">
 						<h2>Category</h2>
 						<div class="panel-group category-products" id="accordian"><!--category-productsr-->
+							<!--- showing the details of the products --->
 							<cfoutput query = "resultCategories" group = "CATEGORY" >
 								<div class="panel panel-default">
 									<div class="panel-heading">
@@ -151,6 +155,7 @@
 										</cfform>
 									</span>
 									<p><b>Availability:</b>
+									<!--- checking the product is in stock or not --->
 									<cfif Int(#resultProductDetail.INSTOCK#)>
 									 	In Stock
 									<cfelse>
@@ -170,6 +175,7 @@
 						</div>
 						<div class="tab-content">
 							<div class="tab-pane fade active in" id="details" >
+								<!--- description of the product --->
 								<cfoutput>
 									#resultProductDetail.DESCRIPTION#
 								</cfoutput>
@@ -178,6 +184,7 @@
 							<div class="tab-pane fade" id="features" >
 								<table class="table table-striped">
 								  <tbody>
+									<!--- showing the features of the product --->
 									<cfoutput query = "resultProductFeatures">
 									    <tr>
 									      <td>#resultProductFeatures.FEATURE#</td>

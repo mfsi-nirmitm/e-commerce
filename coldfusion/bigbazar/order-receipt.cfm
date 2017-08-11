@@ -1,10 +1,11 @@
-
+<!--- checking if total cart session exist or not --->
 <cfif NOT structkeyExists(session,'totalCart') >
 	<cflocation url="index.cfm" addToken="no" />
 </cfif>
 
-
+<!--- fetching the address details  --->
 <cfset variables.getAddress = application.orderService.getAddress(#session.totalCart['cartCustomerId']#) />
+<!--- fetching the order details of customer --->
 <cfset variables.getOrderDetail = application.orderService.getOrderDetail(#session.totalCart['transactionId']#) />
 
 
@@ -71,7 +72,12 @@
 							<ul class="nav navbar-nav">
 								<li><a href="index.cfm">Home</a></li>
 								<li><a href="cart.html"><i class="fa fa-shopping-cart"></i> Cart</a></li>
-								<li><a href="login.html"><i class="fa fa-lock"></i> Login</a></li>
+								<!--- checking the session for logged in user --->
+								<cfif structKeyExists(session,'loggedIn') >
+									<li><a>Hello <cfoutput>#session.loggedIn['customerName']# !</cfoutput></a></li>
+								<cfelse>
+									<li><a href="login.cfm"><i class="fa fa-lock"></i> Login</a></li>
+								</cfif>
 							</ul>
 						</div>
 					</div>
@@ -90,6 +96,7 @@
 
 			<div class="shopper-informations">
 				<div class="row">
+				<!--- showing the shipping and billing addresses --->
 				<cfset variables.index =1 />
 				<cfoutput>
 					<div class="col-sm-5">
@@ -133,7 +140,7 @@
 						</tr>
 					</thead>
 					<tbody>
-
+						<!--- fetching all the detail that a customer has ordered ---->
 						<cfoutput query = "variables.getOrderDetail">
 								<tr>
 									<td class="cart_product">

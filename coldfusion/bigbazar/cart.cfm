@@ -1,10 +1,13 @@
 <cfajaxproxy cfc="coldfusion.bigbazar.components.cartservices" jsclassname="jsClass">
 
+<!--- initializing the variables for use in manipulation --->
 <cfset variables.cartTotalPrice = 0 />
 <cfset variables.cartarray = ArrayNew (1) />
 
+<!--- getting the data in the cart --->
 <cfif structKeyExists(session,'loggedIn')>
 	<cfset variables.getCartLoggedInUser = application.userService.getCartOfRegisteredUser(#session.loggedIn['customerID']#) />
+	<!--- all the cart data added to an array for logged in user --->
 	<cfoutput query="variables.getCartLoggedInUser">
 		<cfset variables.cartbasket = StructNew() />
 		<cfset variables.cartbasket['productwithsellerid'] = #variables.getCartLoggedInUser.PRODUCTWITHSELLERID# />
@@ -17,6 +20,7 @@
 		<cfset ArrayAppend(variables.cartarray, variables.cartbasket) />
 	</cfoutput>
 <cfelseif structkeyExists (session , 'cart') >
+	<!--- all the cart data added to an array for guest user --->
 	<cfloop array = "#session.cart#" index = "thing">
 		<cfset variables.cartbasket = StructNew() />
 		<cfset variables.cartbasket['productwithsellerid'] = #thing['productwithsellerid']# />
@@ -99,6 +103,7 @@
 							<ul class="nav navbar-nav">
 								<li><a href="index.cfm">Home</a></li>
 								<li><a href="cart.cfm" class="active"><i class="fa fa-shopping-cart"></i> Cart</a></li>
+								<!--- checking the session for logged in user --->
 								<cfif structKeyExists(session,'loggedIn') >
 									<li><a>Hello <cfoutput>#session.loggedIn['customerName']# !</cfoutput></a></li>
 								<cfelse>
@@ -128,6 +133,7 @@
 						</tr>
 					</thead>
 					<tbody>
+						<!--- showing all the data of the cart  --->
 						<cfloop array="#variables.cartarray#" index="thing">
 							<cfoutput>
 								<cfset variables.tableID = "table" & "#thing['productwithsellerid']#" />
@@ -162,7 +168,9 @@
 										<p>#thing['shippingprice']# Rs.</p>
 									</td>
 									<cfset variables.totalID = "total" & "#thing['productwithsellerid']#" />
+									<!--- calculating the total data of the cart --->
 									<cfset variables.totalPrice = "#thing['items']#" * (#thing['productprice']# + #thing['shippingprice']#) />
+									<!---  getting the total data of the product with product price and shipping price ---->
 									<cfset variables.cartTotalPrice = #variables.cartTotalPrice# + #variables.totalPrice# />
 									<td class="cart_total"  >
 										<p class="cart_total_price" id = "#variables.totalID#"><span>#variables.totalPrice#</span> Rs.</p>
@@ -189,6 +197,7 @@
 				<div class="col-sm-6">
 					<div class="total_area">
 						<ul>
+							<!--- showing the total data of the cart --->
 							<li>Total Rupees <span id = "totalcartprice"><cfoutput>#variables.cartTotalPrice# </cfoutput></span></li>
 						</ul>
 							<a class="btn btn-default update" href="index.cfm"> < Back to Shopping</a>

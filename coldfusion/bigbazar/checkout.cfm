@@ -1,8 +1,10 @@
+<!--- initializing the variables for further manupulation --->
 <cfset variables.cartTotalPrice = 0 />
 <cfset variables.cartarray = ArrayNew (1) />
 
-
+<!---  checking the session of logged in user ---->
 <cfif structKeyExists(session,'loggedIn')>
+	<!--- fetching the cart data and adding to an array  --->
 	<cfset variables.getCartLoggedInUser = application.userService.getCartOfRegisteredUser(#session.loggedIn['customerID']#) />
 	<cfoutput query="variables.getCartLoggedInUser">
 		<cfset variables.cartbasket = StructNew() />
@@ -16,6 +18,7 @@
 		<cfset ArrayAppend(variables.cartarray, variables.cartbasket) />
 	</cfoutput>
 <cfelseif structkeyExists (session , 'cart') >
+	<!--- fetching the cart data and adding to an array  --->
 	<cfloop array = "#session.cart#" index = "thing">
 		<cfset variables.cartbasket = StructNew() />
 		<cfset variables.cartbasket['productwithsellerid'] = #thing['productwithsellerid']# />
@@ -29,6 +32,8 @@
 	</cfloop>
 </cfif>
 
+
+<!---- initializing the form scop variables --->
 <cfparam name = "form.billing_first_name" default = "" >
 <cfparam name = "form.billing_last_name" default = "" >
 <cfparam name = "form.billing_email" default = "" >
@@ -48,7 +53,9 @@
 <cfparam name = "form.card_security_code" default = "">
 <cfparam name = "form.same_address" default = "off">
 <cfset variables.sameAddress = "false" />
+<!--- checking the seesion of logged in user --->
 <cfif structKeyExists(session, 'loggedIn')>
+	<!---  fetching the data of logged in user and saving to the form scop to show ---->
 	<cfset variables.getUserDetail = application.userService.getUserDetail("#session.loggedIn['customerID']#") />
 	<cfset form.billing_first_name = "#variables.getUserDetail.FIRSTNAME#" />
 	<cfset form.billing_last_name = "#variables.getUserDetail.SECONDNAME#" />
@@ -59,6 +66,7 @@
 	<cfset form.billing_city = "#getAddress.CUSTOMERCITY[variables.index]#" />
 	<cfset form.billing_state = "#getAddress.CUSTOMERSTATE[variables.index]#" />
 	<cfset form.billing_zip = "#getAddress.CUSTOMERZIPCODE[variables.index]#" />
+	<!--- if address is same the index will be 1 and if addresses are different the index will be 2 --->
 	<cfif #getAddress.ADDRESSTYPEID[1]# NEQ 3>
 		<cfset variables.index = 2 />
 	<cfelse>
@@ -76,7 +84,7 @@
 	<cfset form.card_expiration_year = "#variables.getPaymentDetail.CREDITCARDEXPIRATIONYEAR#" />
 </cfif>
 
-
+<!--- initializing some variables for furthur manupulation and showing the error messages --->
 <cfset variables.customerId = 0 />
 <cfset variables.tansactionId = 0 />
 <cfset variables.orderCost = 0 />
@@ -99,12 +107,14 @@
 
 <cfset variables.isFormValid = true />
 
+<!--- checking if form submitted or not ---->
 <cfif structKeyExists(form,'submit')>
+	<!--- adding the validation to the first name --->
 	<cfif Trim(form.billing_first_name) EQ "">
 		<cfset variables.isFormValid = false />
 		<cfset variables.billingFirstNameError = "Please! enter this field" />
 	</cfif>
-
+	<!--- adding validation to the email field --->
 	<cfif Trim(form.billing_email) EQ "" >
 		<cfset variables.isFormValid = false />
 		<cfset variables.billingEmailError = "Please! enter this field" />
@@ -113,21 +123,25 @@
 		<cfset variables.billingEmailError = "Please! enter a valid email " />
 	</cfif>
 
+	<!--- adding validation to the billing address --->
 	<cfif Trim(form.billing_address) EQ "">
 		<cfset variables.isFormValid = false />
 		<cfset variables.billingAddressError = "Please! enter this field" />
 	</cfif>
 
+	<!--- adding validation to the billing state --->
 	<cfif Trim(form.billing_state) EQ "">
 		<cfset variables.isFormValid =  false />
 		<cfset variables.billingStateError = "Please! enter this field" />
 	</cfif>
 
+	<!--- adding validation to the billing city --->
 	<cfif Trim(form.billing_city) EQ "">
 		<cfset variables.isFormValid = false />
 		<cfset variables.billingCityError = "Please! enter this field" />
 	</cfif>
 
+	<!--- adding validation to the billing zip --->
 	<cfif Trim(form.billing_zip) EQ "">
 		<cfset variables.isFormValid = false />
 		<cfset variables.billingZipError = "Please! enter this field">
@@ -136,23 +150,27 @@
 		<cfset variables.billingZipError = "Please! enter a valid zip code of 6 digits" />
 	</cfif>
 
+	<!--- checking the checkbox is checked or not --->
 	<cfif form.same_address NEQ 'on'>
-
+		<!--- adding the validation to the shipping address --->
 		<cfif Trim(form.shipping_address) EQ "">
 			<cfset variables.isFormValid = false />
 			<cfset variables.shippingAddressError = "Please! enter this field" />
 		</cfif>
 
+		<!--- adding the validation to the shipping state --->
 		<cfif Trim(form.shipping_state) EQ "">
 			<cfset variables.isFormValid = false />
 			<cfset variables.shippingStateError = "Please! enter this field" />
 		</cfif>
 
+		<!--- adding validation to the shipping city  --->
 		<cfif Trim(form.shipping_city) EQ "">
 			<cfset variables.isFormValid = false />
 			<cfset variables.shippingCityError = "Please! enter this field" />
 		</cfif>
 
+		<!---- addint validation to the shipping zip ---->
 		<cfif Trim(form.shipping_zip) EQ "" >
 			<cfset variables.isFormValid = false />
 			<cfset variables.shippingZipError = "Please! enter this field" />
@@ -162,16 +180,19 @@
 		</cfif>
 	</cfif>
 
+	<!--- adding validation to the card type field --->
 	<cfif Trim(form.card) EQ "">
 		<cfset variables.isFormValid = false />
 		<cfset variables.cardError = "Please! enter this field">
 	</cfif>
 
+	<!--- adding validation to the nameoncard field --->
 	<cfif Trim(form.credit_card_name) EQ "">
 		<cfset variables.isFormValid = false />
 		<cfset variables.creditCardNameError = "Please! enter this field" />
 	</cfif>
 
+	<!--- addint vallidation to the creditcardnumber field --->
 	<cfif Trim(form.credit_card_number) EQ "">
 		<cfset variables.isFormValid = false />
 		<cfset variables.creditCardNumberError = "Please! enter this field">
@@ -180,16 +201,19 @@
 		<cfset variables.creditCardNumberError = "Please! enter a valid card number of 12 digits" />
 	</cfif>
 
+	<!--- adding validation to the expiring month field --->
 	<cfif Trim(form.card_expiration_month) EQ "">
 		<cfset variables.isFormValid = false />
 		<cfset variables.creditExpirationMonthError ="Please! enter this field" />
 	</cfif>
 
+	<!--- adding validation to the expiring year field --->
 	<cfif Trim(form.card_expiration_year) EQ "">
 		<cfset variables.isFormValid = false />
 		<cfset variables.creditExpirationYearError = "Please! enter this field" />
 	</cfif>
 
+	<!--- adding validation to the security code --->
 	<cfif Trim(form.card_security_code) EQ "">
 		<cfset variables.isFormValid = false />
 		<cfset variables.cardSecurityCodeError = "Please! enter this field" />
@@ -198,38 +222,50 @@
 		<cfset variables.cardSecurityCodeError = "Please! enter a valid 3 digit security code" />
 	</cfif>
 
+	<!--- checking if all the validation test are passed or fail --->
 	<cfif variables.isFormValid >
+		<!--- checking the logged in user --->
 		<cfif NOT structKeyExists(session,'loggedIn')>
+			<!--- adding the customer detail for guest user --->
 			<cfset variables.customerId = #Int(application.checkoutService.insertCustomerDetail(Trim(form.billing_first_name),Trim(form.billing_last_name),Trim(form.billing_email),1))# />
 			<cfset session.totalCart['cartCustomerId'] = #variables.customerId# />
 		<cfelse>
-
+			<!---  adding the cart detail --->
 			<cfset session.totalCart['cartCustomerId'] = #session.loggedIn['customerID']# />
 			<cfset application.userService.removeAddress(#session.loggedIn['customerID']#) />
 			<cfset application.userService.removePayment(#session.loggedIn['customerID']#) />
 		</cfif>
-
+		<!--- checking the checkbox is checked or not --->
 		<cfif form.same_address EQ 'on'>
+			<!--- insert address if shiping address and billing address is same --->
 			<cfset application.checkoutService.insertCustomerAddress(Trim(form.billing_address),Trim(form.billing_state),Trim(form.billing_city),Trim(form.billing_zip),3,#session.totalCart['cartCustomerId']#) />
 		<cfelse>
+			<!--- insert address if shipping address and billing address are different  --->
 			<cfset application.checkoutService.insertCustomerAddress(Trim(form.shipping_address),Trim(form.shipping_state),Trim(form.shipping_city),Trim(form.shipping_zip),1,#session.totalCart['cartCustomerId']#) />
 			<cfset application.checkoutService.insertCustomerAddress(Trim(form.billing_address),Trim(form.billing_state),Trim(form.billing_city),Trim(form.billing_zip),2,#session.totalCart['cartCustomerId']#) />
 		</cfif>
+
+		<!--- adding payment option ---->
 		<cfset application.checkoutService.addPaymentOption(Trim(form.card),Trim(form.credit_card_name),Trim(form.credit_card_number),Trim(form.card_expiration_month),Trim(form.card_expiration_year),#session.totalCart['cartCustomerId']#) />
+		<!--- fetching the transaction detail --->
 		<cfset variables.tansactionId = #Int(application.checkoutService.addTransaction())# />
+		<!--- adding the data to totalcart seesion for generating the bill ---->
 		<cfset session.totalCart['transactionId'] = variables.tansactionId  />
 		<cfif structkeyExists (session , 'cart') >
+			<!--- cart data to be added to orders on successfull transaction --->
 			<cfloop array = "#session.cart#" index = "thing">
 				<cfset variables.orderCost = #thing['items']# * ( #thing['productprice']# + #thing['shippingprice']# ) />
 				<cfset application.checkoutService.addOrders(#thing['productwithsellerid']#,#variables.tansactionId#,#thing['items']#,#variables.orderCost# , #session.totalCart['cartCustomerId']# )  />
 			</cfloop>
 			<cfset structdelete(session,'cart') />
 		<cfelseif structKeyExists(session , 'loggedIn')>
+			<!--- cart data to be added to orders on successfull transaction --->
 			<cfset variables.getCart = application.userService.getCartOfRegisteredUser(#session.loggedIn['customerID']#) />
 			<cfoutput query= "variables.getCart">
 				<cfset variables.orderCost = #variables.getCart.ITEMS# * ( #variables.getCart.PRICE# + #variables.getCart.SHIPPINGPRICE# ) />
 				<cfset application.checkoutService.addOrders(#variables.getCart.PRODUCTWITHSELLERID#,#variables.tansactionId# , #variables.getCart.ITEMS# , #variables.orderCost#,#session.totalCart['cartCustomerId']#) />
 			</cfoutput>
+				<!--- after adding the cart data to orders deleting the data in the cart --->
 				<cfset application.userService.removeCart(#session.loggedIn['customerID']#)>
 		</cfif>
 		<cflocation url="order-receipt.cfm" addToken="no" />
@@ -357,6 +393,7 @@
 									<td class = "cart_price">
 										<p>#thing['shippingprice']# Rs.</p>
 									</td>
+									<!--- calculating the total price for cart --->
 									<cfset variables.totalPrice = "#thing['items']#" * (#thing['productprice']# + #thing['shippingprice']#) />
 									<cfset variables.cartTotalPrice = #variables.cartTotalPrice# + #variables.totalPrice# />
 									<cfset session.totalCart['cartTotalPrice'] = #variables.cartTotalPrice# />

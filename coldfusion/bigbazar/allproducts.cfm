@@ -67,6 +67,7 @@
 							<ul class="nav navbar-nav">
 								<li><a href="index.cfm">Home</a></li>
 								<li><a href="cart.cfm"><i class="fa fa-shopping-cart"></i> Cart</a></li>
+								<!--- checking the session for logged in user ---->
 								<cfif structKeyExists(session,'loggedIn') >
 									<li><a>Hello <cfoutput>#session.loggedIn['customerName']# !</cfoutput></a></li>
 								<cfelse>
@@ -86,6 +87,7 @@
 					<div class="left-sidebar">
 						<h2>Category</h2>
 						<div class="panel-group category-products" id="accordian"><!--category-productsr-->
+						<!--- accessing the categories with their sub categories to show category menu --->
 							<cfoutput query = "resultCategories" group = "CATEGORY" >
 								<div class="panel panel-default">
 									<div class="panel-heading">
@@ -113,6 +115,7 @@
 
 				<div class="col-sm-9 padding-right">
 					<div class="features_items"><!--features_items-->
+					<!--- showing the details of the products --->
 						<cfoutput query = "resultProductDetail" >
 
 								<div class="col-sm-4">
