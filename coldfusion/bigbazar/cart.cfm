@@ -1,5 +1,12 @@
 <cfajaxproxy cfc="coldfusion.bigbazar.components.cartservices" jsclassname="jsClass">
 
+<!--- logged out the user --->
+<cfif structKeyExists(url,'logout')>
+	<cfset structDelete(session , 'loggedIn') />
+	<cflocation url = "index.cfm"  addToken = "no" />
+</cfif>
+
+
 <!--- initializing the variables for use in manipulation --->
 <cfset variables.cartTotalPrice = 0 />
 <cfset variables.cartarray = ArrayNew (1) />
@@ -106,6 +113,8 @@
 								<!--- checking the session for logged in user --->
 								<cfif structKeyExists(session,'loggedIn') >
 									<li><a>Hello <cfoutput>#session.loggedIn['customerName']# !</cfoutput></a></li>
+									<cfset variables.currentURL = "https://" & "#CGI.SERVER_NAME#" & "#CGI.SCRIPT_NAME#" & "?logout" />
+									<li><a href = "<cfoutput>#variables.currentURL#</cfoutput>">Logout</a></li>
 								<cfelse>
 									<li><a href="login.cfm"><i class="fa fa-lock"></i> Login</a></li>
 								</cfif>

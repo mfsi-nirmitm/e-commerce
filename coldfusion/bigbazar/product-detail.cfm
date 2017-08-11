@@ -1,3 +1,10 @@
+<!--- logging out the logged in user --->
+<cfif structKeyExists(url,'logout')>
+	<cfset structDelete(session , 'loggedIn') />
+	<cfset variables.redirectURL = "https://" & "#CGI.SERVER_NAME#" & "#CGI.SCRIPT_NAME#" & "?productID=#url.productID#" />
+	<cflocation url = "#variables.redirectURL#"  addToken = "no" />
+</cfif>
+
 <!--- fetching the name of categories and name of subcategories --->
 <cfset resultCategories = application.productService.getCategoryByGroup() />
 
@@ -88,6 +95,8 @@
 								<cfif structKeyExists(session,'loggedIn') >
 									<!--- checking the session for logged in user --->
 									<li><a>Hello <cfoutput>#session.loggedIn['customerName']# !</cfoutput></a></li>
+									<cfset variables.currentURL = "https://" & "#CGI.SERVER_NAME#" & "#CGI.SCRIPT_NAME#" & "?productID=#url.productID#&logout" />
+									<li><a href = "<cfoutput>#variables.currentURL#</cfoutput>">Logout</a></li>
 								<cfelse>
 									<li><a href="login.cfm"><i class="fa fa-lock"></i> Login</a></li>
 								</cfif>

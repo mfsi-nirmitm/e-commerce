@@ -1,3 +1,9 @@
+<!--- if customer is already login then redirecting to home page ---->
+<cfif structKeyExists(session,'loggedIn')>
+	<cflocation url = "index.cfm" addToken = "no" />
+</cfif>
+
+<!--- initializing the variables  --->
 <cfset variables.billingFirstNameError = "" />
 <cfset variables.passwordError = "" />
 <cfset variables.confirmPasswordError = "" />
@@ -17,6 +23,7 @@
 <cfset variables.creditExpirationYearError = "" />
 <cfset variables.cardSecurityCodeError = "" />
 
+<!--- giving the default value to the form scope variabes --->
 <cfset variables.customerId = 0 />
 <cfparam name = "form.billing_first_name" default = "" >
 <cfparam name = "form.billing_last_name" default = "" >
@@ -39,12 +46,15 @@
 
 <cfset variables.isFormValid = true />
 
+<!--- adding validation to all the fields --->
 <cfif structKeyExists(form,'submit')>
+	<!--- adding validation to first name field --->
 	<cfif Trim(form.billing_first_name) EQ "">
 		<cfset variables.isFormValid = false />
 		<cfset variables.billingFirstNameError = "Please! enter this field" />
 	</cfif>
 
+	<!--- adding validation to password field --->
 	<cfif Trim(form.password) EQ "">
 		<cfset variables.isFormValid = false />
 		<cfset variables.passwordError = "Please! enter this field" />
@@ -53,6 +63,7 @@
 		<cfset variables.passwordError = "Password length should be minimum 4 and atleat 1 small letter , 1 upper letter , 1 digit and 1 special character _!@$%" />
 	</cfif>
 
+	<!--- adding validation to confirm password field --->
 	<cfif Trim(form.confirm_password EQ "")>
 		<cfset variables.isFormValid = false />
 		<cfset variables.confirmPasswordError = "Please! enter this field" />
@@ -61,6 +72,7 @@
 		<cfset variables.confirmPasswordError = "Passwords should be same" />
 	</cfif>
 
+	<!--- adding validation to billing email field --->
 	<cfif Trim(form.billing_email) EQ "" >
 		<cfset variables.isFormValid = false />
 		<cfset variables.billingEmailError = "Please! enter this field" />
@@ -72,21 +84,25 @@
 		<cfset variables.billingEmailError = "This email is already registered with us" />
 	</cfif>
 
+	<!--- adding validation to billing address field --->
 	<cfif Trim(form.billing_address) EQ "">
 		<cfset variables.isFormValid = false />
 		<cfset variables.billingAddressError = "Please! enter this field" />
 	</cfif>
 
+	<!--- adding validation to billing state field --->
 	<cfif Trim(form.billing_state) EQ "">
 		<cfset variables.isFormValid =  false />
 		<cfset variables.billingStateError = "Please! enter this field" />
 	</cfif>
 
+	<!--- adding validation to billing city --->
 	<cfif Trim(form.billing_city) EQ "">
 		<cfset variables.isFormValid = false />
 		<cfset variables.billingCityError = "Please! enter this field" />
 	</cfif>
 
+	<!--- adding validation to billing zip field --->
 	<cfif Trim(form.billing_zip) EQ "">
 		<cfset variables.isFormValid = false />
 		<cfset variables.billingZipError = "Please! enter this field">
@@ -95,23 +111,27 @@
 		<cfset variables.billingZipError = "Please! enter a valid zip code of 6 digits" />
 	</cfif>
 
-	<cfif form.same_address NEQ 'on'>
 
+	<cfif form.same_address NEQ 'on'>
+		<!--- adding validation to shipping address field --->
 		<cfif Trim(form.shipping_address) EQ "">
 			<cfset variables.isFormValid = false />
 			<cfset variables.shippingAddressError = "Please! enter this field" />
 		</cfif>
 
+		<!--- adding validation to shipping state field --->
 		<cfif Trim(form.shipping_state) EQ "">
 			<cfset variables.isFormValid = false />
 			<cfset variables.shippingStateError = "Please! enter this field" />
 		</cfif>
 
+		<!--- adding validation to shipping city field --->
 		<cfif Trim(form.shipping_city) EQ "">
 			<cfset variables.isFormValid = false />
 			<cfset variables.shippingCityError = "Please! enter this field" />
 		</cfif>
 
+		<!--- adding validation to shipping zip field --->
 		<cfif Trim(form.shipping_zip) EQ "" >
 			<cfset variables.isFormValid = false />
 			<cfset variables.shippingZipError = "Please! enter this field" />
@@ -121,16 +141,18 @@
 		</cfif>
 	</cfif>
 
+	<!--- adding validation to card type field  --->
 	<cfif Trim(form.card) EQ "">
 		<cfset variables.isFormValid = false />
 		<cfset variables.cardError = "Please! enter this field">
 	</cfif>
-
+	<!--- adding validation to credit card name field --->
 	<cfif Trim(form.credit_card_name) EQ "">
 		<cfset variables.isFormValid = false />
 		<cfset variables.creditCardNameError = "Please! enter this field" />
 	</cfif>
 
+	<!--- adding validation to credit card number field --->
 	<cfif Trim(form.credit_card_number) EQ "">
 		<cfset variables.isFormValid = false />
 		<cfset variables.creditCardNumberError = "Please! enter this field">
@@ -139,16 +161,19 @@
 		<cfset variables.creditCardNumberError = "Please! enter a valid card number of 12 digits" />
 	</cfif>
 
+	<!--- adding validation to card expiration month --->
 	<cfif Trim(form.card_expiration_month) EQ "">
 		<cfset variables.isFormValid = false />
 		<cfset variables.creditExpirationMonthError ="Please! enter this field" />
 	</cfif>
 
+	<!--- adding validation to card expiration year --->
 	<cfif Trim(form.card_expiration_year) EQ "">
 		<cfset variables.isFormValid = false />
 		<cfset variables.creditExpirationYearError = "Please! enter this field" />
 	</cfif>
 
+	<!--- adding validation to security code field --->
 	<cfif Trim(form.card_security_code) EQ "">
 		<cfset variables.isFormValid = false />
 		<cfset variables.cardSecurityCodeError = "Please! enter this field" />
@@ -157,14 +182,20 @@
 		<cfset variables.cardSecurityCodeError = "Please! enter a valid 3 digit security code" />
 	</cfif>
 
+	<!---- check if all the validations are pass or fail ---->
 	<cfif variables.isFormValid>
+		<!--- adding customer basic detail --->
 		<cfset variables.customerId = application.userService.registerUser(Trim(form.billing_first_name),Trim(form.billing_last_name),Trim(form.password),Trim(form.billing_email),2) />
+		<!--- adding customer address detail --->
 		<cfif form.same_address EQ 'on'>
+			<!--- adding customer address detail if address is same --->
 			<cfset application.checkoutService.insertCustomerAddress(Trim(form.billing_address),Trim(form.billing_state),Trim(form.billing_city),Trim(form.billing_zip),3,variables.customerId) />
 		<cfelse>
+			<!--- adding customer address detail if address are not same --->
 			<cfset application.checkoutService.insertCustomerAddress(Trim(form.shipping_address),Trim(form.shipping_state),Trim(form.shipping_city),Trim(form.shipping_zip),1,variables.customerId) />
 			<cfset application.checkoutService.insertCustomerAddress(Trim(form.billing_address),Trim(form.billing_state),Trim(form.billing_city),Trim(form.billing_zip),2,variables.customerId) />
 		</cfif>
+		<!--- adding customer payment detail --->
 		<cfset application.checkoutService.addPaymentOption(Trim(form.card),Trim(form.credit_card_name),Trim(form.credit_card_number),Trim(form.card_expiration_month),Trim(form.card_expiration_year),variables.customerId) />
 		<cflocation url="login.cfm" addToken="no" />
 	</cfif>
@@ -246,7 +277,7 @@
 	<section id="cart_items">
 		<div class="container head">
 			<div class="shopper-informations">
-				<cfform onsubmit = "return register_form();">
+				<cfform onsubmit = "return register_form();"> <!--- form field start here --->
 				<cfoutput>
 				<div class="row">
 					<div class="col-sm-4">
@@ -341,7 +372,7 @@
 					</div>
 				</div>
 				</cfoutput>
-				</cfform>
+				</cfform> <!--- form field end here --->
 			</div>
 		</div>
 	</section> <!--/#cart_items-->

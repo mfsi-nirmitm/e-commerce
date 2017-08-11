@@ -1,3 +1,10 @@
+<!--- logged out the user --->
+<cfif structKeyExists(url,'logout')>
+	<cfset structDelete(session , 'loggedIn') />
+	<cflocation url = "index.cfm"  addToken = "no" />
+</cfif>
+
+
 <!--- checking if total cart session exist or not --->
 <cfif NOT structkeyExists(session,'totalCart') >
 	<cflocation url="index.cfm" addToken="no" />
@@ -75,6 +82,8 @@
 								<!--- checking the session for logged in user --->
 								<cfif structKeyExists(session,'loggedIn') >
 									<li><a>Hello <cfoutput>#session.loggedIn['customerName']# !</cfoutput></a></li>
+									<cfset variables.currentURL = "https://" & "#CGI.SERVER_NAME#" & "#CGI.SCRIPT_NAME#" & "?logout" />
+									<li><a href = "<cfoutput>#variables.currentURL#</cfoutput>">Logout</a></li>
 								<cfelse>
 									<li><a href="login.cfm"><i class="fa fa-lock"></i> Login</a></li>
 								</cfif>

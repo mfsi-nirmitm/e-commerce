@@ -1,3 +1,8 @@
+<!--- checking if user is already login --->
+<cfif structkeyExists(session , 'loggedIn') >
+	<cflocation url = "index.cfm" addToken = "no" />
+</cfif>
+
 
 <cfset variables.emailError = "" />
 <cfset variables.passwordError = "" />

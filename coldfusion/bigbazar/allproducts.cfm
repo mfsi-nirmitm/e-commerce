@@ -1,3 +1,9 @@
+<cfif structKeyExists(url,'logout')>
+	<cfset structDelete(session , 'loggedIn') />
+	<cfset variables.redirectURL = "https://" & "#CGI.SERVER_NAME#" & "#CGI.SCRIPT_NAME#" & "?subCat=#url.subCat#" />
+	<cflocation url = "#variables.redirectURL#"  addToken = "no" />
+</cfif>
+
 <!--- fetching the all the mobile products --->
 <cfset resultProductDetail = application.productService.getProductDetailBySubCategoryID(url.subCat) />
 
@@ -70,6 +76,8 @@
 								<!--- checking the session for logged in user ---->
 								<cfif structKeyExists(session,'loggedIn') >
 									<li><a>Hello <cfoutput>#session.loggedIn['customerName']# !</cfoutput></a></li>
+									<cfset variables.currentURL = "https://" & "#CGI.SERVER_NAME#" & "#CGI.SCRIPT_NAME#" & "?subCat=#url.subCat#&logout" />
+									<li><a href = "<cfoutput>#variables.currentURL#</cfoutput>">Logout</a></li>
 								<cfelse>
 									<li><a href="login.cfm"><i class="fa fa-lock"></i> Login</a></li>
 								</cfif>
