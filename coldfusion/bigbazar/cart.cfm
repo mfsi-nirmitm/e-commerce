@@ -112,6 +112,7 @@
 								<li><a href="cart.cfm" class="active"><i class="fa fa-shopping-cart"></i> Cart</a></li>
 								<!--- checking the session for logged in user --->
 								<cfif structKeyExists(session,'loggedIn') >
+									<li><a href = "orders.cfm">Orders</a></li>
 									<li><a>Hello <cfoutput>#session.loggedIn['customerName']# !</cfoutput></a></li>
 									<cfset variables.currentURL = "https://" & "#CGI.SERVER_NAME#" & "#CGI.SCRIPT_NAME#" & "?logout" />
 									<li><a href = "<cfoutput>#variables.currentURL#</cfoutput>">Logout</a></li>
@@ -222,7 +223,7 @@
 		<div class="footer-bottom">
 			<div class="container">
 				<div class="row">
-					<p class="pull-left">Copyright © 2013 E-SHOPPER Inc. All rights reserved.</p>
+					<p class="pull-left">Copyright © 2017 E-SHOPPER Inc. All rights reserved.</p>
 				</div>
 			</div>
 		</div>

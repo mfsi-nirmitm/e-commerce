@@ -4,6 +4,12 @@
 	<cflocation url = "#variables.redirectURL#"  addToken = "no" />
 </cfif>
 
+
+<!--- if url parameter is not given then page will be redirected to index page --->
+<cfif NOT structKeyExists(url,'subCat')>
+	<cflocation url="index.cfm" addToken = "no" />
+</cfif>
+
 <!--- fetching the all the mobile products --->
 <cfset resultProductDetail = application.productService.getProductDetailBySubCategoryID(url.subCat) />
 
@@ -75,6 +81,7 @@
 								<li><a href="cart.cfm"><i class="fa fa-shopping-cart"></i> Cart</a></li>
 								<!--- checking the session for logged in user ---->
 								<cfif structKeyExists(session,'loggedIn') >
+									<li><a href = "orders.cfm">Orders</a></li>
 									<li><a>Hello <cfoutput>#session.loggedIn['customerName']# !</cfoutput></a></li>
 									<cfset variables.currentURL = "https://" & "#CGI.SERVER_NAME#" & "#CGI.SCRIPT_NAME#" & "?subCat=#url.subCat#&logout" />
 									<li><a href = "<cfoutput>#variables.currentURL#</cfoutput>">Logout</a></li>
@@ -126,7 +133,7 @@
 					<!--- showing the details of the products --->
 						<cfoutput query = "resultProductDetail" >
 
-								<div class="col-sm-4">
+								<div class="col-sm-4" >
 									<a href="product-detail.cfm?productID=#resultProductDetail.PRODUCTWITHSELLERID#">
 										<div class="product-image-wrapper">
 											<div class="single-products">
@@ -150,7 +157,7 @@
 		<div class="footer-bottom">
 			<div class="container">
 				<div class="row">
-					<p class="pull-left">Copyright © 2013 E-Shopper. All rights reserved.</p>
+					<p class="pull-left">Copyright © 2017 E-Shopper. All rights reserved.</p>
 				</div>
 			</div>
 		</div>

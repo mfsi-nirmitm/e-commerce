@@ -5,6 +5,12 @@
 	<cflocation url = "#variables.redirectURL#"  addToken = "no" />
 </cfif>
 
+
+<!--- if url parameter is not given then page will be redirected to index page --->
+<cfif NOT structKeyExists(url,'productID')>
+	<cflocation url="index.cfm" addToken = "no" />
+</cfif>
+
 <!--- fetching the name of categories and name of subcategories --->
 <cfset resultCategories = application.productService.getCategoryByGroup() />
 
@@ -93,6 +99,7 @@
 								<li><a href="index.cfm">Home</a></li>
 								<li><a href="cart.cfm"><i class="fa fa-shopping-cart"></i> Cart</a></li>
 								<cfif structKeyExists(session,'loggedIn') >
+									<li><a href = "orders.cfm">Orders</a></li>
 									<!--- checking the session for logged in user --->
 									<li><a>Hello <cfoutput>#session.loggedIn['customerName']# !</cfoutput></a></li>
 									<cfset variables.currentURL = "https://" & "#CGI.SERVER_NAME#" & "#CGI.SCRIPT_NAME#" & "?productID=#url.productID#&logout" />
@@ -214,7 +221,7 @@
 		<div class="footer-bottom">
 			<div class="container">
 				<div class="row">
-					<p class="pull-left">Copyright © 2013 E-SHOPPER Inc. All rights reserved.</p>
+					<p class="pull-left">Copyright © 2017 E-SHOPPER Inc. All rights reserved.</p>
 				</div>
 			</div>
 		</div>

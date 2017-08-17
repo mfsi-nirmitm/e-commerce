@@ -74,6 +74,7 @@
 								<li><a href="cart.cfm"><i class="fa fa-shopping-cart"></i> Cart</a></li>
 								<!--- checking the session for logged in user  --->
 								<cfif structKeyExists(session,'loggedIn') >
+									<li><a href = "orders.cfm">Orders</a></li>
 									<li><a>Hello <cfoutput>#session.loggedIn['customerName']# !</cfoutput></a></li>
 									<cfset variables.currentURL = "https://" & "#CGI.SERVER_NAME#" & "#CGI.SCRIPT_NAME#" & "?logout" />
 									<li><a href = "<cfoutput>#variables.currentURL#</cfoutput>">Logout</a></li>
@@ -181,7 +182,9 @@
 					<div class="recommended_items"><!--recommended_items-->
 						<h2 class="title text-center">About Us</h2>
 						<p> We provide different types of products which can be ordered by our customers with online payment at low product cost and low shipping cost.</p>
-
+						<p> Contact Address :  Suresh Sharma Nagar , Bareilly, Uttar Pradesh -243006</p>
+						<p> Contact No : 8989898989</p>
+						<p> 24 * 7 hour service </p>
 					</div><!--/recommended_items-->
 
 				</div>
@@ -193,7 +196,7 @@
 		<div class="footer-bottom">
 			<div class="container">
 				<div class="row">
-					<p class="pull-left">Copyright © 2013 E-SHOPPER Inc. All rights reserved.</p>
+					<p class="pull-left">Copyright © 2017 E-SHOPPER Inc. All rights reserved.</p>
 				</div>
 			</div>
 		</div>
