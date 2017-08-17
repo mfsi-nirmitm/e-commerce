@@ -133,7 +133,11 @@
 					<cfqueryparam value = "#arguments.items#" cfsqltype = "cf_sql_numeric" /> ,
 					<cfqueryparam value = "#arguments.totalCost#" cfsqltype = "cf_sql_numeric" /> ,
 					<cfqueryparam value = "#arguments.customerID#" cfsqltype = "cf_sql_numeric" />
-				)
+				);
+
+				UPDATE PRODUCTSWITHSELLERS
+				SET INSTOCK = INSTOCK - <cfqueryparam value = "#arguments.items#" cfsqltype = "cf_sql_numeric" />
+				WHERE PRODUCTWITHSELLERID = <cfqueryparam value = "#arguments.productWithSellerID#" cfsqltype = "cf_sql_numeric" /> ;
 			</cfquery>
 			<!--- redirecting to the error page if database is not connected --->
 			<cfcatch type="any" >
@@ -141,5 +145,4 @@
 			</cfcatch>
 		</cftry>
 	</cffunction>
-
 </cfcomponent>

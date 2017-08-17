@@ -21,7 +21,11 @@
 		<cfif NOT variables.isValid>
 			<cfset variables.passwordError = "Email or Password does not exist" />
 		<cfelse>
-			<cflocation url = "index.cfm" addToken = "no" />
+			<cfif structKeyExists(url,'checkout') >
+				<cflocation url="checkout.cfm" addToken = "no" />
+			<cfelse>
+				<cflocation url = "index.cfm" addToken = "no" />
+			</cfif>
 		</cfif>
 	</cfif>
 </cfif>
@@ -130,7 +134,11 @@
 				<div class="col-sm-4 padding">
 
 						<p><a href="registration.cfm">New User ? ( Registration )</a></p>
-						<p><a href="checkout.cfm">Continue as guest user ?</a></p>
+						<cfif structKeyExists(url,'checkout')>
+							<p><a href="checkout.cfm">Continue as guest user ?</a></p>
+						<cfelse>
+							<p><a href="index.cfm">Continue as guest user ?</a></p>
+						</cfif>
 
 				</div>
 			</div>

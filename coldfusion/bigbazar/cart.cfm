@@ -211,7 +211,12 @@
 							<li>Total Rupees <span id = "totalcartprice"><cfoutput>#variables.cartTotalPrice# </cfoutput></span></li>
 						</ul>
 							<a class="btn btn-default update" href="index.cfm"> < Back to Shopping</a>
-							<a class="btn btn-default check_out" href="checkout.cfm">Check Out</a>
+							<cfif NOT structKeyExists(session,'loggedIn') >
+								<a class="btn btn-default check_out" href="login.cfm?checkout" >Check Out</a>
+							<cfelse>
+								<a class="btn btn-default check_out" href="checkout.cfm">Check Out</a>
+
+							</cfif>
 					</div>
 				</div>
 			</div>

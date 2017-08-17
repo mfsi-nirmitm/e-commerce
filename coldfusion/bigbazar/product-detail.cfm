@@ -20,11 +20,23 @@
 <!--- fetching the details of all the feature of product with a perticular seller --->
 <cfset resultProductFeatures = application.productService.getProductFeatureByProductWithSellerID(url.productID) />
 
+<cfset variables.stockErrorMessage = "" />
+<cfset variables.isValid = true />
+
 <!--- set default value to 1 to default parameter of no of items --->
 <cfparam name="form.items" default="1">
+<cfif form.items LTE 0 >
+	<cfset variables.stockErrorMessage = "not valid"  />
+	<cfset variables.isValid = false />
+<cfelseif resultProductDetail.INSTOCK LT form.items  >
+	<cfset variables.stockErrorMessage = '#resultProductDetail.INSTOCK#' & " left" />
+	<cfset variables.isValid = false />
+<cfelse>
+	<cfset variables.isValid = true />
+</cfif>
 
 <!--- adding item to the cart --->
-<cfif structkeyExists(FORM,'submit')>
+<cfif structkeyExists(FORM,'submit') && variables.isValid>
 	<cfif structKeyExists(session,'loggedIn') >
 		<!--- adding the cart for logged in user --->
 		<cfset application.userService.addCartForRegisteredUser(#resultProductDetail.PRODUCTWITHSELLERID#,#session.loggedIn['customerID']#,#form.items#) />
@@ -162,7 +174,7 @@
 										<span>#resultProductDetail.PRICE# Rs.</span>
 										<cfform>
 											<p><label>Quantity:</label>
-											<cfinput type = "text" value = "#form.items#" name = "items" id = "items" /></p>
+											<cfinput type = "text" value = "#form.items#" name = "items" id = "items" /><span class="error error_stock" >#variables.stockErrorMessage#</span></p>
 											<cfinput type = "submit" class = "btn btn-fefault cart submit" value = "Add to cart" name = "submit" id = "submit" />
 											<!---<button type="submit" class="btn btn-fefault cart">
 												<i class="fa fa-shopping-cart"></i>
@@ -178,6 +190,7 @@
 									 	Out Of Stock
 									</cfif>
 									</p>
+									<p><b>Seller :</b> #resultProductDetail.SELLERNAME#</p>
 								</div><!--/product-information-->
 							</div>
 						</div><!--/product-details-->

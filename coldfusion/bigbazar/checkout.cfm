@@ -231,6 +231,7 @@
 
 	<!--- checking if all the validation test are passed or fail --->
 	<cfif variables.isFormValid >
+
 		<!--- checking the logged in user --->
 		<cfif NOT structKeyExists(session,'loggedIn')>
 			<!--- adding the customer detail for guest user --->

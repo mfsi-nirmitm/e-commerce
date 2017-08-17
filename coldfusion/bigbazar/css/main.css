@@ -1222,9 +1222,9 @@ h2.title {
 .product-information {
   border: 1px solid #F7F7F0;
   overflow: hidden;
-  padding-bottom: 60px;
-  padding-left: 60px;
-  padding-top: 60px;
+  padding-bottom: 53px;
+  padding-left: 53px;
+  padding-top: 53px;
   position: relative;
 }
 
@@ -1293,8 +1293,8 @@ h2.title {
   color: #FFFFFF;
   font-family: 'Roboto', sans-serif;
   font-size: 15px;
-  margin-bottom: 10px;
-  margin-top: 20px;
+  margin-bottom: 8px;
+  margin-top: 8px;
 }
 
 
@@ -2005,10 +2005,19 @@ h2.title {
   border-bottom: 1px solid #F7F7F0;
 }
 
-.error{
-	color : #ff0000;
-}
 
+.error{
+	color : #ff0000 !important ;
+}
+.error_stock{
+	font-size : 15px !important;
+	font-style : normal !important;
+	float : none !important;
+	font-weight: normal !important;
+	margin-right : 0 !important;
+	margin-bottom : 0 !important ;
+	margin-left :5px !important;
+}
 
 /*************************
 *******Blog CSS******
