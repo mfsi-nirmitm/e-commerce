@@ -14,8 +14,8 @@
 <cfset variables.getAddress = application.orderService.getAddress(#session.totalCart['cartCustomerId']#) />
 <!--- fetching the order details of customer --->
 <cfset variables.getOrderDetail = application.orderService.getOrderDetail(#session.totalCart['transactionId']#) />
-
-
+<!--- transaction number ---->
+<cfset variables.transactionNumber = application.orderService.getTransactionNumber(#session.totalCart['transactionId']#)  />
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -134,7 +134,7 @@
 				</cfoutput>
 			</div>
 			<div class="review-payment">
-				<h2>Your Orders ( Transaction :  )</h2>
+				<h2>Your Orders ( Transaction :  <cfoutput>#variables.transactionNumber#</cfoutput>)</h2>
 			</div>
 
 			<div class="table-responsive cart_info">
