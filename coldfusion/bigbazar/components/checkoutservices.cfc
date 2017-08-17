@@ -86,7 +86,8 @@
 					<cfqueryparam value = "#arguments.customerID#" cfsqltype = "cf_sql_numeric" />
 				)
 			</cfquery>
-			<cfcatch type="any" >
+			<!--- redirecting to the error page if database is not connected --->
+ 			<cfcatch type="any" >
 				<cflocation url = "error.cfm" addToken = "no" />
 			</cfcatch>
 		</cftry>
@@ -125,13 +126,12 @@
 		<cftry>
 			<cfquery>
 				INSERT INTO CUSTOMERORDERS
-				( PRODUCTWITHSELLERID ,  CUSTOMERTRANSACTIONID , ORDERITEMS , ORDERTOTALCOST , CUSTOMERID )
+				( PRODUCTWITHSELLERID ,  CUSTOMERTRANSACTIONID , ORDERITEMS  , CUSTOMERID )
 				VALUES
 				(
 					<cfqueryparam value = "#arguments.productWithSellerID#" cfsqltype = "cf_sql_numeric" /> ,
 					<cfqueryparam value = "#arguments.transactionID#" cfsqltype = "cf_sql_numeric" /> ,
 					<cfqueryparam value = "#arguments.items#" cfsqltype = "cf_sql_numeric" /> ,
-					<cfqueryparam value = "#arguments.totalCost#" cfsqltype = "cf_sql_numeric" /> ,
 					<cfqueryparam value = "#arguments.customerID#" cfsqltype = "cf_sql_numeric" />
 				);
 
